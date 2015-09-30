@@ -4,20 +4,13 @@
 
 [![npm status](http://img.shields.io/npm/v/generator-nom.svg?style=flat-square)](https://www.npmjs.org/package/generator-nom) [![Dependency status](https://img.shields.io/david/ironsource/generator-nom.svg?style=flat-square)](https://david-dm.org/ironsource/generator-nom)
 
-## demo
-
 ![demo](https://github.com/ironSource/node-generator-nom/raw/master/demo.gif)
 
 ## what it does
 
 *`yo nom`* will ask you which subgenerators to execute, then executes those in order as listed below. Those you successfully ran before will be disabled by default. Run any of them separately with `yo nom:*`. For example: `yo nom:travis` to just setup Travis.
 
-<style>
-    dl.omnomnom dt { font-style: normal }
-    dl.omnomnom code { color: red }
-</style>
-
-<dl class="omnomnom">
+<dl>
 <dt>npm</dt><dd>Create <code>package.json</code> and prompt to keep dependencies of a previous <code>package.json</code> if any. Create <code>.gitignore</code>, <code>cli.js</code> (optional), install test framework (tape, tap, mocha, grunt, cake, or ava), add <code>LICENSE</code> file (MIT, BSD2 or BSD3).</dd>
 
 <dt>git</dt><dd>Initialize local git repository, unless <code>.git</code> directory exists</dd>
