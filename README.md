@@ -2,7 +2,7 @@
 
 **A modular [Yeoman](http://yeoman.io) generator to create or update node modules. It's composed of several subgenerators - relatively unopinionated, apart from a preference for ES6 - that are usable by themselves. Most but not all input values are remembered.**
 
-[![npm status](http://img.shields.io/npm/v/generator-nom.svg?style=flat-square)](https://www.npmjs.org/package/generator-nom) [![Dependency status](https://img.shields.io/david/ironsource/generator-nom.svg?style=flat-square)](https://david-dm.org/ironsource/generator-nom)
+[![npm status](http://img.shields.io/npm/v/generator-nom.svg?style=flat-square)](https://www.npmjs.org/package/generator-nom) [![Dependency status](https://img.shields.io/david/ironsource/node-generator-nom.svg?style=flat-square)](https://david-dm.org/ironsource/node-generator-nom)
 
 ![demo](https://github.com/ironSource/node-generator-nom/raw/master/demo.gif)
 
