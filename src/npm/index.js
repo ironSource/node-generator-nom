@@ -159,7 +159,7 @@ const self = module.exports = class NpmGenerator extends Conditional {
       name: 'website',
       message: 'What is the URL of your website?',
       store: true,
-      default: answers => defaults.website || (answers.name.replace('/[^a-z]/gi', '') + '.com'),
+      default: answers => defaults.website || (answers.name.replace('/[^a-z]+/gi', '').toLowerCase() + '.com'),
       validate: val => val.length ? true : 'You have to provide a website URL',
       filter: val => normalizeUrl(val)
     },
