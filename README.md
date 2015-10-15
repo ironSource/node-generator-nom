@@ -10,23 +10,37 @@
 
 *`yo nom`* will ask you which subgenerators to execute, then executes those in order as listed below. Those you successfully ran before will be disabled by default. Run any of them separately with `yo nom:*`. For example: `yo nom:travis` to just setup Travis.
 
-<dl>
-<dt>npm</dt><dd>Create <code>package.json</code> and prompt to keep dependencies of a previous <code>package.json</code> if any. Create <code>.gitignore</code>, <code>cli.js</code> (optional), install test framework (tape, tap, mocha, grunt, cake, or ava), add <code>LICENSE</code> file (MIT, BSD2 or BSD3).</dd>
+### `npm`
 
-<dt>git</dt><dd>Initialize local git repository, unless <code>.git</code> directory exists</dd>
+Create `package.json` and prompt to keep dependencies of a previous `package.json` if any. Create `.gitignore`, `cli.js` (optional), install test framework (tape, tap, mocha, grunt, cake, or ava), add `LICENSE` file (MIT, BSD2 or BSD3).
 
-<dt>github</dt><dd>Create public or private GitHub project, named "module-name" or "node-module-name". Unless local git already has configured remotes. Asks for access token and repository owner (which defaults to the owner of the token), skips creation if the repository already exists, adds URLs to <code>package.json</code> and adds remote origin.</dd>
+### `git`
 
-<dt>travis</dt><dd>Add <code>.travis.yml</code> for node 0.10 and iojs, setup GitHub hook. The <code>travis</code> tool asks for username and password.</dd>
+Initialize local git repository, unless `.git` directory exists.
 
-<dt>appveyor</dt><dd>Add <code>appveyor.yml</code> for node 0.10 and iojs, setup GitHub hook. Asks for access token.</dd>
+### `github`
 
-<dt>gulp</dt><dd>Create an ES6 gulpfile and <code>tasks</code> directory.</dd>
+Create public or private GitHub project, named "module-name" or "node-module-name". Unless local git already has configured remotes. Asks for access token and repository owner (which defaults to the owner of the token), skips creation if the repository already exists, adds URLs to `package.json` and adds remote origin.
 
-<dt>style [todo]</dt><dd>Add <code>standard</code> or <code>xo</code> as a pretest script</dd>
+### `travis`
 
-<dt>readme</dt><dd>Add <code>readme.md</code> with common sections and <a href="https://shield.io">shield.io</a> badges for npm and david. If you did the travis and/or appveyor setup, badges for those services will be added as well.</dd>
-</dl>
+Add `.travis.yml` for node 0.10 and iojs, setup GitHub hook. The `travis` tool asks for username and password.
+
+### `appveyor`
+
+Add `appveyor.yml` for node 0.10 and iojs, setup GitHub hook. Asks for access token.
+
+### `gulp`
+
+Create an ES6 gulpfile and `tasks` directory.
+
+### `style` (todo)
+
+Add `standard` or `xo` as a pretest script.
+
+### `readme`
+
+Add `readme.md` with common sections and [shield.io](https://shield.io) badges for npm and david. If you did the travis and/or appveyor setup, badges for those services will be added as well.
 
 ## usage
 
