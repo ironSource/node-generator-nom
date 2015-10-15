@@ -147,8 +147,8 @@ const self = module.exports = class NomGenerator extends Base {
   }
 
   _getGeneratorOptions(generator) {
-    let { name, description } = this.options
-    return { name, description, ...this.options[generator] }
+    let { name, description, skipInstall, skipCache } = this.options
+    return { name, description, skipInstall, skipCache, ...this.options[generator] }
   }
 }
 
