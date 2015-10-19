@@ -22,7 +22,7 @@ const self = module.exports = class GulpGenerator extends Conditional {
     this.copy('_gulpfile.babel.js', 'gulpfile.babel.js')
     this.copy('_.babelrc', '.babelrc')
 
-    let ctx = {}
+    let ctx = this.options.ctx || {}
     this.fs.copyTpl([].concat(this.options.tasks), this.destinationPath('tasks'), ctx)
 
     let deps = {
