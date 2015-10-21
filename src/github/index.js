@@ -97,14 +97,17 @@ const self = module.exports = class GithubGenerator extends Conditional {
           return done(err)
         }
 
+        let defaultOwner = data.login
+
         // Prompt for repository owner (default to username)
         this.prompt([{
           name: 'owner',
           message: 'Who should be the repository owner?',
-          default: data.login,
-          filter: v => (typeof v === 'string' ? v.trim() : '')
+          default: defaultOwner,
+          filter: (v) => (typeof v === 'string' ? v.trim() : '')
         }], answers => {
           let { owner } = answers
+          let isDefaultOwner = owner.toLowerCase() === defaultOwner.toLowerCase()
 
           if (!owner) {
             this.log.skip('Will not create GitHub project, owner name is empty')
@@ -133,7 +136,9 @@ const self = module.exports = class GithubGenerator extends Conditional {
             }
 
             // If not, create
-            this._createGitHubProject(ghme, repositoryName, description, err => {
+            let api = isDefaultOwner ? ghme : client.org(owner)
+
+            this._createGitHubProject(api, repositoryName, description, err => {
               if (err) {
                 this.log.error('Failed to create GitHub project: "' + err + '"')
                 return done()
@@ -176,14 +181,14 @@ const self = module.exports = class GithubGenerator extends Conditional {
     })
   }
 
-  _createGitHubProject(ghme, repositoryName, description, done) {
+  _createGitHubProject(api, name, description, done) {
     this.prompt([{
       name: 'pub',
       message: 'Do you want to make this repository public?',
       type: 'confirm',
       default: true
     }], answers => {
-      ghme.repo({ name: repositoryName, description, 'private': !answers.pub }, (err, body, headers) => {
+      api.repo({ name, description, 'private': !answers.pub }, (err, body, headers) => {
         if (err) return done(err)
 
         let type = answers.pub ? 'Public' : 'Private'
