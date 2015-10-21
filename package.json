@@ -1,6 +1,6 @@
 {
   "name": "generator-nom",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "license": "MIT",
   "description": "A modular generator to create or update node modules",
   "keywords": [
