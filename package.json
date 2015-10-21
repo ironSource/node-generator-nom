@@ -36,7 +36,8 @@
     "babel-core": "~5.8.25",
     "gulp": "~3.9.0",
     "gulp-babel": "~5.2.1",
-    "gulp-if": "~2.0.0"
+    "gulp-if": "~2.0.0",
+    "trash": "~2.0.0"
   },
   "engines": {
     "node": ">=0.10.0",
