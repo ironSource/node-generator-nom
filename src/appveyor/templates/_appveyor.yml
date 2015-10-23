@@ -6,12 +6,12 @@ skip_tags: true
 environment:
   matrix:
     - nodejs_version: "0.10"
-    - nodejs_version: "1"
+    - nodejs_version: "4"
 
 install:
   - ps: Install-Product node $env:nodejs_version
-  - set CI=true
-  - npm -g i tape
+  - npm -g i npm@latest
+  - set PATH=%APPDATA%\npm;%PATH%;%APPVEYOR_BUILD_FOLDER%\node_modules\.bin
   - npm i
 
 test_script:
