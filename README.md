@@ -12,7 +12,7 @@
 
 ### `npm`
 
-Create `package.json` and prompt to keep dependencies of a previous `package.json` if any. Create `.gitignore`, `cli.js` (optional), install test framework (tape, tap, mocha, grunt, cake, or ava), add `LICENSE` file (MIT, BSD2 or BSD3).
+Create `package.json`, `.gitignore`, `cli.js` (optional), install test framework (tape, tap, mocha, grunt, cake, or ava), add `LICENSE` file (MIT, BSD2 or BSD3). If a `package.json` already exists, it will be merged, used for default answers and for sort order of the top-level fields. At deeper levels, like dependencies, nom behaves like npm and sorts lexicographically.
 
 ### `git`
 
