@@ -5,8 +5,8 @@
   "license": "<%= license %>",
   "author": {
     "name": "<%= name %>",
-    "email": "<%= email %>",
-    "url": "<%= humanizedWebsite %>"
+    "email": "<%= email %>",<% if (url) { %>
+    "url": "<%= url %>"<% } %>
   },<% if (cli) { %>
   "bin": "cli.js",<% } %>
   "scripts": {

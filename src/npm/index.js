@@ -3,9 +3,8 @@
 var Conditional = require('../conditional-subgen')
   , camelCase = require('camel-case')
   , paramCase = require('param-case')
-  , normalizeUrl = require('normalize-url')
-  , humanizeUrl = require('humanize-url')
-  , parseAuthor = require('parse-author')
+  , normalOrEmptyUrl = require('./normal-or-empty-url')
+  , guessAuthor = require('./guess-author')
   , mkdirp = require('mkdirp')
 
 const LICENSE_TEMPLATES = [ 'mit', 'bsd2', 'bsd3' ]
@@ -34,7 +33,7 @@ const self = module.exports = class NpmGenerator extends Conditional {
     done(null, !ctx.fs.readJSON('package.json', false))
   }
 
-  _getDefaults() {
+  _getDefaults(done) {
     let { name, description
         , author, license
         , devDependencies = {}
@@ -43,52 +42,51 @@ const self = module.exports = class NpmGenerator extends Conditional {
         , repository, bugs, homepage
         , browserify, browser
         } = this.fs.readJSON('package.json', {})
-    
-    let testFramework = 'tape'
-    let gitUser = this.user.git
 
-    if (typeof author === 'string') author = parseAuthor(author)
-    if (!author) author = {}
+    guessAuthor(author, this.user.git, (err, author) => {
+      if (err) return done(err)
 
-    // Find previous test framework
-    let deps = Object.keys(devDependencies)
-    for(let i=0, l=TEST_FRAMEWORKS.length; i<l; i++) {
-      if (deps.indexOf(TEST_FRAMEWORKS[i]) >=0 ) {
-        testFramework = TEST_FRAMEWORKS[i]
-        break
+      // Find previous test framework
+      let testFramework = 'tape'
+      let deps = Object.keys(devDependencies)
+      for(let i=0, l=TEST_FRAMEWORKS.length; i<l; i++) {
+        if (deps.indexOf(TEST_FRAMEWORKS[i]) >=0 ) {
+          testFramework = TEST_FRAMEWORKS[i]
+          break
+        }
       }
-    }
 
-    let jsonIf = (obj, allowString) => {
-      if (typeof obj === 'object' && Object.keys(obj).length > 0) {
-        return JSON.stringify(obj) // No need to prettify, npm will do that
-      } else if (allowString && typeof obj === 'string' && obj.length > 0) {
-        return JSON.stringify(obj)
-      } else {
-        return undefined
+      let jsonIf = (obj, allowString) => {
+        if (typeof obj === 'object' && Object.keys(obj).length > 0) {
+          return JSON.stringify(obj) // No need to prettify, npm will do that
+        } else if (allowString && typeof obj === 'string' && obj.length > 0) {
+          return JSON.stringify(obj)
+        } else {
+          return undefined
+        }
       }
-    }
 
-    return {
-      dependencies,
-      devDependencies,
-      version: version || '0.0.1',
-      repository: jsonIf(repository, true),
-      bugs: jsonIf(bugs, true),
-      homepage: jsonIf(homepage, true),
-      browserify: jsonIf(browserify),
-      browser: jsonIf(browser),
-      moduleName: name ? paramCase(name) : paramCase(this.appname),
-      description: description || 'my module',
-      license: license || 'MIT',
-      testFramework,
-      name: author.name || gitUser.name(),
-      copyrightHolder: this.config.get('copyrightHolder'),
-      email: author.email || gitUser.email(),
-      website: author.website || author.url,
-      cli: !!bin,
-      keywords: (keywords || []).filter(k => k).join(' ')
-    }
+      done(null, {
+        dependencies,
+        devDependencies,
+        version: version || '0.0.1',
+        repository: jsonIf(repository, true),
+        bugs: jsonIf(bugs, true),
+        homepage: jsonIf(homepage, true),
+        browserify: jsonIf(browserify),
+        browser: jsonIf(browser),
+        moduleName: name ? paramCase(name) : paramCase(this.appname),
+        description: description || 'my module',
+        license: license || 'MIT',
+        testFramework,
+        name: author.name,
+        copyrightHolder: this.config.get('copyrightHolder'),
+        email: author.email,
+        url: author.url,
+        cli: !!bin,
+        keywords: (keywords || []).filter(k => k).join(' ')
+      })
+    })
   }
 
   _getLicenses(defaultLicense) {
@@ -98,11 +96,21 @@ const self = module.exports = class NpmGenerator extends Conditional {
     else return LICENSES
   }
 
+  initializing() {
+    let done = this.async()
+
+    this._getDefaults((err, defaults) => {
+      if (err) return done(err)
+      this.defaults = defaults
+      done()
+    })
+  }
+
   prompting() {
     // Any question can be skipped by providing an option
     let { name: moduleName, description, ...rest } = this.options
     let override = { moduleName, description, ...rest }
-    let defaults = this._getDefaults()
+    let defaults = this.defaults
 
     let questions = [{
       name: 'moduleName',
@@ -156,12 +164,11 @@ const self = module.exports = class NpmGenerator extends Conditional {
       validate: val => val.length ? true : 'You have to provide an email address'
     },
     {
-      name: 'website',
-      message: 'What is the URL of your website?',
+      name: 'url',
+      message: 'What is the URL of your website (optional)?',
       store: true,
-      default: answers => defaults.website || (answers.name.replace('/[^a-z]+/gi', '').toLowerCase() + '.com'),
-      validate: val => val.length ? true : 'You have to provide a website URL',
-      filter: val => normalizeUrl(val)
+      default: defaults.url,
+      filter: normalOrEmptyUrl
     },
     {
       name: 'keywords',
@@ -208,7 +215,6 @@ const self = module.exports = class NpmGenerator extends Conditional {
       })
 
       ctx.camelModuleName = camelCase(ctx.moduleName)
-      ctx.humanizedWebsite = humanizeUrl(ctx.website)
       ctx.testFramework = ctx.testFramework === 'none' ? null : ctx.testFramework
       ctx.testCommand = ctx.testFramework ? ctx.testFramework + ' test/**/*.js' : ''
 
