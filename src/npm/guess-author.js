@@ -3,7 +3,7 @@ var npmconf = require('npmconf')
   , normalOrEmptyUrl = require('./normal-or-empty-url')
 
 // Get author info from existing package, npm config or git
-function guessAuthor(prevAuthor, gitUser, done) {
+module.exports = function(prevAuthor, gitUser, done) {
   let author = prevAuthor
 
   if (typeof author === 'string') author = parseAuthor(author)

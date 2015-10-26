@@ -29,6 +29,8 @@
     "param-case": "~1.1.1",
     "parse-author": "~0.2.0",
     "path-exists": "~2.0.0",
+    "sorted-object": "~1.0.0",
+    "stable": "~0.1.5",
     "travisjs": "~0.7.0",
     "yeoman-generator": "~0.20.3"
   },

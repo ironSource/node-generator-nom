@@ -6,6 +6,7 @@ var Conditional = require('../conditional-subgen')
   , normalOrEmptyUrl = require('./normal-or-empty-url')
   , guessAuthor = require('./guess-author')
   , mkdirp = require('mkdirp')
+  , deepSortObject = require('./deep-sort-object')
 
 const LICENSE_TEMPLATES = [ 'mit', 'bsd2', 'bsd3' ]
 
@@ -39,9 +40,7 @@ const self = module.exports = class NpmGenerator extends Conditional {
         , devDependencies = {}
         , dependencies = {}
         , version, keywords, bin
-        , repository, bugs, homepage
-        , browserify, browser
-        } = this.fs.readJSON('package.json', {})
+        } = this.pack
 
     guessAuthor(author, this.user.git, (err, author) => {
       if (err) return done(err)
@@ -56,25 +55,10 @@ const self = module.exports = class NpmGenerator extends Conditional {
         }
       }
 
-      let jsonIf = (obj, allowString) => {
-        if (typeof obj === 'object' && Object.keys(obj).length > 0) {
-          return JSON.stringify(obj) // No need to prettify, npm will do that
-        } else if (allowString && typeof obj === 'string' && obj.length > 0) {
-          return JSON.stringify(obj)
-        } else {
-          return undefined
-        }
-      }
-
       done(null, {
         dependencies,
         devDependencies,
         version: version || '0.0.1',
-        repository: jsonIf(repository, true),
-        bugs: jsonIf(bugs, true),
-        homepage: jsonIf(homepage, true),
-        browserify: jsonIf(browserify),
-        browser: jsonIf(browser),
         moduleName: name ? paramCase(name) : paramCase(this.appname),
         description: description || 'my module',
         license: license || 'MIT',
@@ -98,6 +82,8 @@ const self = module.exports = class NpmGenerator extends Conditional {
 
   initializing() {
     let done = this.async()
+
+    this.pack = this.fs.readJSON('package.json', {})
 
     this._getDefaults((err, defaults) => {
       if (err) return done(err)
@@ -246,12 +232,36 @@ const self = module.exports = class NpmGenerator extends Conditional {
     })
   }
 
+  _writePackage() {
+    let { ctx, pack } = this
+
+    pack.name = ctx.moduleName
+
+    ;['version', 'description', 'license', 'dependencies', 'devDependencies', 'keywords'].forEach(key => {
+      pack[key] = deepSortObject(ctx[key])
+    })
+
+    pack.author = { name: ctx.name, email: ctx.email }
+    if (ctx.url) pack.author.url = ctx.url
+
+    if (ctx.cli) pack.bin = "cli.js"
+
+    if (!pack.scripts) pack.scripts = {}
+    if (!pack.scripts.test && ctx.testCommand) pack.scripts.test = ctx.testCommand
+
+    let { node = '>=0.10.0', npm = '>=2.0.0', ...restEngines } = pack.engines || {}
+    pack.engines = { node, npm, ...restEngines }
+
+    this.fs.writeJSON(this.destinationPath('package.json'), pack)
+  }
+
   // Do this early in the run loop, b/c other subgens depend on it
   configuring() {
     let ctx = this.ctx
     let cp = (from, to) => this.fs.copyTpl(this.templatePath(from), this.destinationPath(to), ctx)
-    
-    cp('_package.json', 'package.json')
+
+    this._writePackage()
+
     cp('_index.js', 'index.js')
     cp('_.gitignore', '.gitignore')
 
