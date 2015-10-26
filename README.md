@@ -12,7 +12,7 @@
 
 ### `npm`
 
-Create `package.json`, `.gitignore`, `cli.js` (optional), install test framework (tape, tap, mocha, grunt, cake, or ava), add `LICENSE` file (MIT, BSD2 or BSD3). If a `package.json` already exists, it will be merged, used for default answers and for sort order of the top-level fields. At deeper levels, like dependencies, nom behaves like npm and sorts lexicographically.
+Create `package.json`, `.gitignore`, install test framework (tape, tap, mocha, grunt, cake, or ava), add `LICENSE` file (MIT, BSD2 or BSD3). If a `package.json` already exists, it will be merged, used for default answers and for sort order of the top-level fields. At deeper levels, like dependencies, nom behaves like npm and sorts lexicographically.
 
 ### `git`
 
@@ -30,9 +30,9 @@ Add `.travis.yml` for node 0.10 and iojs, setup GitHub hook. The `travis` tool a
 
 Add `appveyor.yml` for node 0.10 and iojs, setup GitHub hook. Asks for access token.
 
-### `gulp`
+### `cli`
 
-Create an ES6 gulpfile and `tasks` directory.
+Create a CLI app (with [meow](https://github.com/sindresorhus/meow)) and add a `bin` field to `package.json`. Asks for name and path.
 
 ### `style` (todo)
 
@@ -41,6 +41,10 @@ Add `standard` or `xo` as a pretest script.
 ### `readme`
 
 Add `readme.md` with common sections and [shield.io](https://shield.io) badges for npm and david. If you did the travis and/or appveyor setup, badges for those services will be added as well.
+
+### `gulp`
+
+Create an ES6 gulpfile and `tasks` directory.
 
 ## usage
 

@@ -1,7 +1,6 @@
 'use strict';
 
 var Conditional = require('../conditional-subgen')
-  , camelCase = require('camel-case')
   , paramCase = require('param-case')
   , normalOrEmptyUrl = require('./normal-or-empty-url')
   , guessAuthor = require('./guess-author')
@@ -39,7 +38,7 @@ const self = module.exports = class NpmGenerator extends Conditional {
         , author, license
         , devDependencies = {}
         , dependencies = {}
-        , version, keywords, bin
+        , version, keywords
         } = this.pack
 
     guessAuthor(author, this.user.git, (err, author) => {
@@ -67,7 +66,6 @@ const self = module.exports = class NpmGenerator extends Conditional {
         copyrightHolder: this.config.get('copyrightHolder'),
         email: author.email,
         url: author.url,
-        cli: !!bin,
         keywords: (keywords || []).filter(k => k).join(' ')
       })
     })
@@ -169,12 +167,6 @@ const self = module.exports = class NpmGenerator extends Conditional {
       message: 'What are the space separated keywords for your module?',
       default: defaults.keywords,
       filter: val => (val || '').toLowerCase().split(/[ ,;\/|]+/).filter(k => k)
-    },
-    {
-      name: 'cli',
-      message: 'Do you need a CLI?',
-      type: 'confirm',
-      default: defaults.cli
     }]
 
     // Take existing dependencies
@@ -208,7 +200,6 @@ const self = module.exports = class NpmGenerator extends Conditional {
         if (ctx[key] == null) ctx[key] = defaults[key]
       })
 
-      ctx.camelModuleName = camelCase(ctx.moduleName)
       ctx.testFramework = ctx.testFramework === 'none' ? null : ctx.testFramework
       ctx.testCommand = ctx.testFramework ? ctx.testFramework + ' test/**/*.js' : ''
 
@@ -218,8 +209,6 @@ const self = module.exports = class NpmGenerator extends Conditional {
       if (ctx.testFramework && ctx.devDependencies.indexOf(ctx.testFramework) < 0) {
         ctx.devDependencies.push(ctx.testFramework)
       }
-      
-      if (ctx.cli) ctx.devDependencies.push('meow')
 
       let saveDeps = {}
       ;['dependencies', 'devDependencies'].forEach(group => {
@@ -253,8 +242,6 @@ const self = module.exports = class NpmGenerator extends Conditional {
     pack.author = { name: ctx.name, email: ctx.email }
     if (ctx.enableUrl && ctx.url) pack.author.url = ctx.url
 
-    if (ctx.cli) pack.bin = "cli.js"
-
     if (!pack.scripts) pack.scripts = {}
     if (!pack.scripts.test && ctx.testCommand) pack.scripts.test = ctx.testCommand
 
@@ -277,8 +264,6 @@ const self = module.exports = class NpmGenerator extends Conditional {
 
     cp('_index.js', 'index.js')
     cp('_.gitignore', '.gitignore')
-
-    if (ctx.cli) cp('_cli.js', 'cli.js')
 
     let license = ctx.license.toLowerCase()
     if (LICENSE_TEMPLATES.indexOf(license) >= 0) {

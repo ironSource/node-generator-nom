@@ -7,15 +7,15 @@ var meow = require('meow')
 var cli = meow({
   help: [
     'Usage',
-    '  $ <%= moduleName %> [input]',
+    '  $ <%= binName %> [input]',
     '',
     'Options',
     '  --flag  Description (default: false)',
     '',
     'Examples',
-    '  $ <%= moduleName %>',
+    '  $ <%= binName %>',
     '  unicorns',
-    '  $ <%= moduleName %> ponies',
+    '  $ <%= binName %> ponies',
     '  ponies'
   ]
 }, {

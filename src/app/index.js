@@ -9,6 +9,7 @@ const subgenerators =
   , 'github'
   , 'travis'
   , 'appveyor'
+  , 'cli'
   , 'readme'
   , 'gulp' ]
 
