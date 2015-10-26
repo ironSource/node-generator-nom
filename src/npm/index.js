@@ -240,13 +240,14 @@ const self = module.exports = class NpmGenerator extends Conditional {
     })
   }
 
+  // Note: the order in which we set fields matters for new or partial packages.
   _writePackage() {
     let { ctx, pack } = this
 
     pack.name = ctx.moduleName
 
-    ;['version', 'description', 'license', 'dependencies', 'devDependencies', 'keywords'].forEach(key => {
-      pack[key] = deepSortObject(ctx[key])
+    ;['version', 'description', 'license'].forEach(key => {
+      pack[key] = ctx[key]
     })
 
     pack.author = { name: ctx.name, email: ctx.email }
@@ -256,6 +257,10 @@ const self = module.exports = class NpmGenerator extends Conditional {
 
     if (!pack.scripts) pack.scripts = {}
     if (!pack.scripts.test && ctx.testCommand) pack.scripts.test = ctx.testCommand
+
+    ;['dependencies', 'devDependencies', 'keywords'].forEach(key => {
+      pack[key] = deepSortObject(ctx[key])
+    })
 
     let { node = '>=0.10.0', npm = '>=2.0.0', ...restEngines } = pack.engines || {}
     pack.engines = { node, npm, ...restEngines }
