@@ -150,9 +150,17 @@ const self = module.exports = class NpmGenerator extends Conditional {
       validate: val => val.length ? true : 'You have to provide an email address'
     },
     {
-      name: 'url',
-      message: 'What is the URL of your website (optional)?',
+      name: 'enableUrl',
+      message: 'Do you want to list a website?',
+      type: 'confirm',
       store: true,
+      default: true
+    },
+    {
+      name: 'url',
+      message: 'What is the URL of your website?',
+      store: true,
+      when: (answers) => answers.enableUrl,
       default: defaults.url,
       filter: normalOrEmptyUrl
     },
@@ -242,7 +250,7 @@ const self = module.exports = class NpmGenerator extends Conditional {
     })
 
     pack.author = { name: ctx.name, email: ctx.email }
-    if (ctx.url) pack.author.url = ctx.url
+    if (ctx.enableUrl && ctx.url) pack.author.url = ctx.url
 
     if (ctx.cli) pack.bin = "cli.js"
 
