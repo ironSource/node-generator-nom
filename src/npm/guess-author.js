@@ -12,7 +12,7 @@ function guessAuthor(prevAuthor, gitUser, done) {
   let pick = (sources) => {
     for (let i=0, l=sources.length; i<l; i++) {
       let s = sources[i]
-      
+
       if (typeof s === 'function') s = s()
       if (typeof s === 'string') {
         s = s.trim()
