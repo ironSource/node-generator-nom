@@ -28,8 +28,8 @@ const self = module.exports = class GulpGenerator extends Conditional {
     let deps = {
       'gulp': '~3.9.0',
       'gulp-util': '~3.0.6',
-      'babel-core': null, // use latest version
-      'glob': null
+      'babel-core': '~5.8.33',
+      'glob': null // use latest version
     }
 
     this.saveDependencies(deps, { dev: true }, this.async())
