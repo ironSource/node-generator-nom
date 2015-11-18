@@ -1,8 +1,8 @@
 'use strict';
 
-var Conditional = require('../conditional-subgen')
-  , parseAuthor = require('parse-author')
-  , camel = require('camel-case')
+const Conditional = require('../conditional-subgen')
+    , parseAuthor = require('parse-author')
+    , camel = require('camel-case')
 
 const self = module.exports = class ReadmeGenerator extends Conditional {
   static task = 'Create readme file'
@@ -13,8 +13,8 @@ const self = module.exports = class ReadmeGenerator extends Conditional {
 
   // TODO: use new fs API
   writing() {
-    var pkg = this.fs.readJSON('package.json', false)
-    
+    let pkg = this.fs.readJSON('package.json', false)
+
     if (!pkg) {
       return this.log.error('Cannot create readme file because package.json is missing')
     }
@@ -42,7 +42,7 @@ const self = module.exports = class ReadmeGenerator extends Conditional {
     let repo = pkg.repository || ''
       , url = typeof repo == 'string' ? repo : repo.url || ''
       , match = url.match(/^(.*github.com\/)?([^\.#\/]+\/[^\.#\/$]+)/)
-    
+
     this.repoName = (match && match[2]) || ''
 
     if (!this.repoName) {

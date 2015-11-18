@@ -1,9 +1,9 @@
 'use strict';
 
-var Conditional = require('../conditional-subgen')
-  , git = require('gift')
-  , octo = require('octonode')
-  , pathExists = require('path-exists')
+const Conditional = require('../conditional-subgen')
+    , git = require('gift')
+    , octo = require('octonode')
+    , pathExists = require('path-exists')
 
 const self = module.exports = class GithubGenerator extends Conditional {
   static task = 'Host this project on GitHub'
@@ -77,7 +77,7 @@ const self = module.exports = class GithubGenerator extends Conditional {
       this.log.error('Failed to create GitHub repository after 2 retries')
       return done()
     }
-    
+
     this._getToken((err, token) => {
       if (err || !token) return done(err)
 
@@ -155,7 +155,7 @@ const self = module.exports = class GithubGenerator extends Conditional {
   _getToken(done) {
     let token = this.settings.get('github_oauth');
     if (token) return setImmediate(done.bind(null, null, token))
-    
+
     this.log('\nPlease create a new access token for Github at'+
                'https://github.com/settings/tokens/new - with'+
                'the "public_repo" and/or "repo" scopes.\n')
@@ -205,7 +205,7 @@ const self = module.exports = class GithubGenerator extends Conditional {
       return this.log.skip('Update URLs of package.json - no GitHub repository name set')
     }
 
-    var pkg = this.fs.readJSON('package.json', false)
+    let pkg = this.fs.readJSON('package.json', false)
 
     if (pkg) {
       if (!pkg.repository) pkg.repository = qualifiedName

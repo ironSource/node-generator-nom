@@ -1,6 +1,6 @@
-var npmconf = require('npmconf')
-  , parseAuthor = require('parse-author')
-  , normalOrEmptyUrl = require('./normal-or-empty-url')
+const npmconf = require('npmconf')
+    , parseAuthor = require('parse-author')
+    , normalOrEmptyUrl = require('./normal-or-empty-url')
 
 // Get author info from existing package, npm config or git
 module.exports = function(prevAuthor, gitUser, done) {
@@ -51,4 +51,3 @@ module.exports = function(prevAuthor, gitUser, done) {
     done(null, { name, email, url: normalOrEmptyUrl(url) })
   })
 }
-

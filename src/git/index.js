@@ -1,8 +1,8 @@
 'use strict';
 
-var Conditional = require('../conditional-subgen')
-  , git = require('gift')
-  , pathExists = require('path-exists')
+const Conditional = require('../conditional-subgen')
+    , git = require('gift')
+    , pathExists = require('path-exists')
 
 const self = module.exports = class GitGenerator extends Conditional {
   static task = 'Initialize local git repository'

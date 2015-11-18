@@ -9,7 +9,7 @@
 `npm i <%= packageName %>`
 
 ```js
-var <%= camelCaseName %> = require('<%= packageName %>')
+const <%= camelCaseName %> = require('<%= packageName %>')
 ```
 
 ## api

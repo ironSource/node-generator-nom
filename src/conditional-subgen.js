@@ -1,11 +1,11 @@
 'use strict';
 
-var ConfigStore = require('configstore')
-  , after = require('after')
-  , latest = require('latest-version')
+const ConfigStore = require('configstore')
+    , after = require('after')
+    , latest = require('latest-version')
 
-var { name: moduleName, bugs } = require('../package.json')
-var { Base } = require('yeoman-generator')
+const { name: moduleName, bugs } = require('../package.json')
+const { Base } = require('yeoman-generator')
 
 const self = module.exports = class ConditionalGenerator extends Base {
   static getSettings() {

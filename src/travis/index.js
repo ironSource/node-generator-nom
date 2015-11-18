@@ -1,7 +1,7 @@
 'use strict';
 
-var Conditional = require('../conditional-subgen')
-  , travisjs = require.resolve('travisjs/bin/travisjs')
+const Conditional = require('../conditional-subgen')
+    , travisjs = require.resolve('travisjs/bin/travisjs')
 
 const self = module.exports = class TravisGenerator extends Conditional {
   static task = 'Setup Travis'
@@ -16,7 +16,7 @@ const self = module.exports = class TravisGenerator extends Conditional {
   }
 
   // The travis tool needs git info, so we need to run this
-  // after everything else has been written to disk. 
+  // after everything else has been written to disk.
   end() {
     let done = this.async()
     this.spawnCommand('node', [travisjs, 'hook']).on('exit', done)

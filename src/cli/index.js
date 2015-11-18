@@ -1,8 +1,8 @@
 'use strict';
 
-var Conditional = require('../conditional-subgen')
-  , camelCase = require('camel-case')
-  , paramCase = require('param-case')
+const Conditional = require('../conditional-subgen')
+    , camelCase = require('camel-case')
+    , paramCase = require('param-case')
 
 function paramCasePath(path) {
   path = path.toLowerCase()

@@ -1,7 +1,7 @@
 'use strict';
 
-var Conditional = require('../conditional-subgen')
-  , AppVeyor = require('appveyor')
+const Conditional = require('../conditional-subgen')
+    , AppVeyor = require('appveyor')
 
 const self = module.exports = class AppVeyorGenerator extends Conditional {
   static task = 'Setup AppVeyor'
