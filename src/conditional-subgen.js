@@ -19,7 +19,7 @@ const self = module.exports = class ConditionalGenerator extends Base {
 
   saveDependencies(deps, opts, done) {
     if (typeof opts === 'function') done = opts, opts = {}
-    
+
     let group = opts && opts.dev ? 'devDependencies' : 'dependencies'
 
     if (Array.isArray(deps)) {
@@ -28,12 +28,7 @@ const self = module.exports = class ConditionalGenerator extends Base {
       deps = obj
     }
 
-    let pkg = this.fs.readJSON('package.json', false)
-    
-    if (!pkg) {
-      this.log.error(`Cannot install ${group} because package.json is missing`)
-      return setImmediate(done)
-    }
+    let pkg = this.fs.readJSON('package.json', {})
 
     // Will run during the 'install' phase of the run loop. Other
     // subgens have the opportunity to add dependencies before that.
