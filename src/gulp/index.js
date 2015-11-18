@@ -6,6 +6,7 @@ const { looseBoolean } = require('../app/option-parser')
 const self = module.exports = class GulpGenerator extends Conditional {
   static task = 'Install gulp 3.9 and create gulpfile'
   static regenerate = 'Reinstall gulp 3.9 and recreate gulpfile'
+  static runByDefault = false
   static shouldRun(ctx, opts, done) {
     done(null, !ctx.fs.exists('gulpfile.js') && !ctx.fs.exists('gulpfile.babel.js'))
   }
