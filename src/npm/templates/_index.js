@@ -1,5 +1,11 @@
 'use strict';
 
-module.exports = function() {
-  
+<% if (modules === 'es6') { -%>
+export default function() {
+
 }
+<% } else { -%>
+module.exports = function() {
+
+}
+<% } -%>

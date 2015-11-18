@@ -1,7 +1,8 @@
 'use strict';
 
-var after = require('after')
-var { Base } = require('yeoman-generator')
+const after = require('after')
+const { Base } = require('yeoman-generator')
+const { looseBoolean, strictString } = require('./option-parser')
 
 const subgenerators =
   [ 'npm'
@@ -17,22 +18,42 @@ const self = module.exports = class NomGenerator extends Base {
   constructor(args, options, config) {
     super(args, options, config)
 
-    // Yeoman's option parsing is not strict enough for
-    // our purposes. Don't allow empty strings, and take
-    // the first of "--name a --name b".
+    // "--name beep", "--description boop"
     ;['name', 'description'].forEach(option => {
       this.option(option, {
         type: 'String',
         desc: 'Module option passed to every subgenerator'
       })
 
-      let value = this.options[option]
-
-      if (Array.isArray(value)) value = value[0]
-      if (typeof value !== 'string' || value.trim() === '') {
-        this.options[option] = undefined
-      }
+      this.options[option] = strictString(this.options[option], undefined)
     })
+
+    // "--esnext" or "--no-esnext" or "--esnext true"
+    this.option('esnext', {
+      type: 'Boolean',
+      desc: `Use ES6 when possible or never (--no-esnext)`
+    })
+
+    this.options.esnext = looseBoolean(this.options.esnext, undefined)
+
+    // "--modules es6"
+    this.option('modules', {
+      type: 'String',
+      desc: 'Module format, case insensitive: ES6 or CommonJS'
+    })
+
+    let modules
+      = this.options.modules
+      = strictString(this.options.modules, undefined)
+
+    if (modules !== undefined) {
+      modules = this.options.modules = modules.toLowerCase()
+      if (modules !== 'es6' && modules !== 'commonjs') {
+        throw new Error('Module format must be "es6", "commonjs" or undefined')
+      }
+    }
+
+    if (this.options.esnext === false) this.options.modules = 'commonjs'
 
     // "--enable a --enable b" or "--enable a b"
     ;['enable', 'disable'].forEach( (option, i) => {
@@ -44,7 +65,7 @@ const self = module.exports = class NomGenerator extends Base {
       })
 
       let value = this.options[option]
-      
+
       if (typeof value === 'string') {
         value = value.split(/[ ,;\/|]+/)
       } else if (!Array.isArray(value)) {
@@ -77,7 +98,7 @@ const self = module.exports = class NomGenerator extends Base {
 
       let { task, shouldRun, regenerate, runByDefault = true } = Generator
       let generatorOptions = this._getGeneratorOptions(subgen)
-      
+
       shouldRun(this, generatorOptions, (err, should) => {
         if (err) return next(err)
 
@@ -87,7 +108,7 @@ const self = module.exports = class NomGenerator extends Base {
         let disable = this.options.disable.indexOf(subgen) >= 0
 
         if (disable) return next() // Skip subgen, no matter what
-        
+
         if (should && enable) { // Skip question, subgen is required by parent
           this.tasksToRun.push(subgen)
           return next()
@@ -107,7 +128,7 @@ const self = module.exports = class NomGenerator extends Base {
 
         next()
       })
-    })    
+    })
   }
 
   _promptForTasks(primary, secondary, done) {
@@ -148,8 +169,8 @@ const self = module.exports = class NomGenerator extends Base {
   }
 
   _getGeneratorOptions(generator) {
-    let { name, description, skipInstall, skipCache } = this.options
-    return { name, description, skipInstall, skipCache, ...this.options[generator] }
+    let { name, description, esnext, modules, skipInstall, skipCache } = this.options
+    return { name, description, esnext, modules, skipInstall, skipCache, ...this.options[generator] }
   }
 }
 

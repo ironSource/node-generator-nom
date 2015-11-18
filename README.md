@@ -1,6 +1,6 @@
 # generator-nom
 
-**A modular [Yeoman](http://yeoman.io) generator to create or update node modules. It's composed of several subgenerators - relatively unopinionated, apart from a preference for ES6 - that are usable by themselves. Most but not all input values are remembered.**
+**A modular [Yeoman](http://yeoman.io) generator to create or update node modules. It's composed of several subgenerators, relatively unopinionated, usable by themselves. Most but not all input values are remembered.**
 
 [![npm status](http://img.shields.io/npm/v/generator-nom.svg?style=flat-square)](https://www.npmjs.org/package/generator-nom) [![Dependency status](https://img.shields.io/david/ironsource/node-generator-nom.svg?style=flat-square)](https://david-dm.org/ironsource/node-generator-nom)
 
@@ -44,7 +44,7 @@ Add `readme.md` with common sections and [shield.io](https://shield.io) badges f
 
 ### `gulp`
 
-Create an ES6 gulpfile and `tasks` directory.
+Create an ES5 or ES6 gulpfile and `tasks` directory.
 
 ## usage
 
@@ -59,7 +59,7 @@ yo nom
 Install Yeoman and generator-nom globally with [npm](https://npmjs.org):
 
 ```
-npm i yo generator-nom -g 
+npm i yo generator-nom -g
 ```
 
 ## license and acknowledgments

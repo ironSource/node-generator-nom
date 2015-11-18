@@ -1,11 +1,13 @@
 'use strict';
 
-var Conditional = require('../conditional-subgen')
-  , paramCase = require('param-case')
-  , normalOrEmptyUrl = require('./normal-or-empty-url')
-  , guessAuthor = require('./guess-author')
-  , mkdirp = require('mkdirp')
-  , deepSortObject = require('./deep-sort-object')
+const Conditional = require('../conditional-subgen')
+    , paramCase = require('param-case')
+    , normalOrEmptyUrl = require('./normal-or-empty-url')
+    , guessAuthor = require('./guess-author')
+    , mkdirp = require('mkdirp')
+    , deepSortObject = require('./deep-sort-object')
+
+const { strictString } = require('../app/option-parser')
 
 const LICENSE_TEMPLATES = [ 'mit', 'bsd2', 'bsd3' ]
 
@@ -26,11 +28,62 @@ const TEST_FRAMEWORKS = [
   'ava'
 ]
 
-const self = module.exports = class NpmGenerator extends Conditional {  
+const DEFAULT_MAIN = 'index.js'
+
+function paramCasePath(path) {
+  return path.split(/[\/\\]+/).map(paramCase).filter(k=>k).join('/')
+}
+
+const self = module.exports = class NpmGenerator extends Conditional {
   static task = 'Create package.json and common files'
   static regenerate = 'Recreate package.json and common files'
   static shouldRun(ctx, opts, done) {
     done(null, !ctx.fs.readJSON('package.json', false))
+  }
+
+  constructor(args, options, config) {
+    super(args, options, config)
+
+    // "--main" or "--no-main" or "--main lib/index.js"
+    this.option('main', {
+      type: 'Boolean',
+      desc: `Relative path to main file or none (--no-main)`,
+    })
+
+    let main = this.options.main
+
+    if (main === true || main == null) {
+      this.options.main = undefined // Use default or package.main
+    } else if (typeof main === 'string') {
+      if (main === '') this.options.main = false
+      else {
+        let cased = paramCasePath(main)
+
+        if (cased === '') {
+          let msg = `Main path must be param cased: "${main}"`
+          throw new Error(msg)
+        }
+
+        this.options.main = cased
+      }
+    } else {
+      this.options.main = false
+    }
+
+    // "--modules es6"
+    this.option('modules', {
+      type: 'String',
+      desc: 'Module format, case insensitive: ES6 or CommonJS',
+      defaults: 'CommonJS'
+    })
+
+    let modules
+      = this.options.modules
+      = strictString(this.options.modules, 'CommonJS').toLowerCase()
+
+    if (modules !== 'es6' && modules !== 'commonjs') {
+      throw new Error('Module format must be "es6", "commonjs" or undefined')
+    }
   }
 
   _getDefaults(done) {
@@ -39,6 +92,7 @@ const self = module.exports = class NpmGenerator extends Conditional {
         , devDependencies = {}
         , dependencies = {}
         , version, keywords
+        , main
         } = this.pack
 
     guessAuthor(author, this.user.git, (err, author) => {
@@ -54,9 +108,16 @@ const self = module.exports = class NpmGenerator extends Conditional {
         }
       }
 
+      if (this.options.main === false) {
+        main = false
+      } else {
+        main = this.options.main || main || DEFAULT_MAIN
+      }
+
       done(null, {
         dependencies,
         devDependencies,
+        main,
         version: version || '0.0.1',
         moduleName: name ? paramCase(name) : paramCase(this.appname),
         description: description || 'my module',
@@ -182,11 +243,11 @@ const self = module.exports = class NpmGenerator extends Conditional {
       // Add overrides to context
       Object.keys(override).forEach(key => {
         if (override[key] == null) return
-        
+
         if (isDependencies(key)) {
           let deps = Array.isArray(override[key]) ? override[key] : Object.keys(override[key])
             , current = ctx[key] || []
-          
+
           ctx[key] = current.concat(deps.filter(d => current.indexOf(d) < 0))
           ctx[key].sort()
         } else {
@@ -239,6 +300,12 @@ const self = module.exports = class NpmGenerator extends Conditional {
       pack[key] = ctx[key]
     })
 
+    if (ctx.main === false) {
+      delete pack.main
+    } else if (ctx.main !== DEFAULT_MAIN) {
+      pack.main = ctx.main
+    }
+
     pack.author = { name: ctx.name, email: ctx.email }
     if (ctx.enableUrl && ctx.url) pack.author.url = ctx.url
 
@@ -262,7 +329,8 @@ const self = module.exports = class NpmGenerator extends Conditional {
 
     this._writePackage()
 
-    cp('_index.js', 'index.js')
+    if (ctx.main !== false) cp('_index.js', ctx.main)
+
     cp('_.gitignore', '.gitignore')
 
     let license = ctx.license.toLowerCase()
