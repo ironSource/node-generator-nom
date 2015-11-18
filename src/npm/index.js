@@ -57,6 +57,10 @@ const self = module.exports = class NpmGenerator extends Conditional {
     } else if (typeof main === 'string') {
       if (main === '') this.options.main = false
       else {
+        if (main.slice(-3).toLowerCase() === '.js') {
+          main = main.slice(0, -3)
+        }
+
         let cased = paramCasePath(main)
 
         if (cased === '') {
@@ -64,7 +68,7 @@ const self = module.exports = class NpmGenerator extends Conditional {
           throw new Error(msg)
         }
 
-        this.options.main = cased
+        this.options.main = cased + '.js'
       }
     } else {
       this.options.main = false
@@ -290,7 +294,7 @@ const self = module.exports = class NpmGenerator extends Conditional {
     })
   }
 
-  // Note: the order in which we set fields matters for new or partial packages.
+  // Note: the order in which we set fields matters for new packages.
   _writePackage() {
     let { ctx, pack } = this
 
