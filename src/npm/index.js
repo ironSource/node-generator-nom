@@ -50,44 +50,53 @@ const self = module.exports = class NpmGenerator extends Conditional {
       desc: `Relative path to main file or none (--no-main)`,
     })
 
-    let main = this.options.main
-
-    if (main === true || main == null) {
-      this.options.main = undefined // Use default or package.main
-    } else if (typeof main === 'string') {
-      if (main === '') this.options.main = false
-      else {
-        if (main.slice(-3).toLowerCase() === '.js') {
-          main = main.slice(0, -3)
-        }
-
-        let cased = paramCasePath(main)
-
-        if (cased === '') {
-          let msg = `Main path must be param cased: "${main}"`
-          throw new Error(msg)
-        }
-
-        this.options.main = cased + '.js'
-      }
-    } else {
-      this.options.main = false
-    }
-
     // "--modules es6"
     this.option('modules', {
       type: 'String',
       desc: 'Module format, case insensitive: ES6 or CommonJS',
       defaults: 'CommonJS'
     })
+  }
+
+  initializing() {
+    let done = this.async()
+    let main = this.options.main
+
+    if (main === true || main == null) {
+      this.options.main = undefined // Use default or package.main
+    } else if (typeof main === 'string') {
+      if (main.slice(-3).toLowerCase() === '.js') {
+        main = main.slice(0, -3)
+      }
+
+      let cased = paramCasePath(main)
+
+      if (cased === '') {
+        let msg = `Main path must be param cased: "${main}"`
+        return this.env.error(msg)
+      }
+
+      this.options.main = cased + '.js'
+    } else {
+      this.options.main = false
+    }
 
     let modules
       = this.options.modules
       = strictString(this.options.modules, 'CommonJS').toLowerCase()
 
     if (modules !== 'es6' && modules !== 'commonjs') {
-      throw new Error('Module format must be "es6", "commonjs" or undefined')
+      let msg = 'Module format must be "es6", "commonjs" or undefined'
+      return this.env.error(msg)
     }
+
+    this.pack = this.fs.readJSON('package.json', {})
+
+    this._getDefaults((err, defaults) => {
+      if (err) return done(err)
+      this.defaults = defaults
+      done()
+    })
   }
 
   _getDefaults(done) {
@@ -141,18 +150,6 @@ const self = module.exports = class NpmGenerator extends Conditional {
     let id = defaultLicense.toUpperCase().trim()
     if (LICENSES.indexOf(id) < 0) return [defaultLicense].concat(LICENSES)
     else return LICENSES
-  }
-
-  initializing() {
-    let done = this.async()
-
-    this.pack = this.fs.readJSON('package.json', {})
-
-    this._getDefaults((err, defaults) => {
-      if (err) return done(err)
-      this.defaults = defaults
-      done()
-    })
   }
 
   prompting() {

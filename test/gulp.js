@@ -42,29 +42,26 @@ test('esnext option or prompt', (t) => {
   t.test('esnext option overrides prompt', (t) => {
     t.plan(2)
 
-    run('gulp')
-      .withOptions({ esnext: true })
-      .withPrompts({ esnext: false })
-      .on('end', () => {
+    run('gulp')(ctx => {
+      ctx.withOptions({esnext: true})
+      ctx.withPrompts({esnext: false})
+      ctx.on('end', () => {
         files(t, ES6)
         notFiles(t, ES5)
       })
+    })
   })
 })
 
 test('creates example gulp task', (t) => {
   t.plan(1)
-  run('gulp', () => {
-    files(t, ['tasks/build.js'])
-  })
+  run('gulp', () => files(t, ['tasks/build.js']))
 })
 
 test('saves dependencies', (t) => {
   t.plan(1)
 
-  let options = { esnext: true }
-
-  run('gulp', { options }, () => {
+  run('gulp', { options: { esnext: true } }, () => {
     let expected = ['gulp', 'gulp-util', 'glob', 'babel-core']
       , pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'))
       , actual = Object.keys(pkg.devDependencies)

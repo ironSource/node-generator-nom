@@ -1,34 +1,67 @@
-const pathExists = require('path-exists')
+const exists = require('path-exists')
+    , fs = require('fs')
+    , patch = require('monkeypatch')
 
 const { resolve, join } = require('path')
     , { test: helpers } = require('yeoman-generator')
 
 const SRC = resolve(__dirname, '..', '..', 'src')
+    , FIXTURE = resolve(__dirname, '..', 'fixtures')
 
-function files(t, files, msg) {
+const queue = []
+
+exports.files = function files(t, files, msg) {
   files = [].concat(files)
-  let passed = files.filter(f => pathExists.sync(f))
+  let passed = files.filter(f => exists.sync(f))
   t.deepEqual(passed, files, msg || files.join(', '))
 }
 
-function notFiles(t, files, msg) {
+exports.notFiles = function notFiles(t, files, msg) {
   files = [].concat(files)
-  let passed = files.filter(f => !pathExists.sync(f))
+  let passed = files.filter(f => !exists.sync(f))
   t.deepEqual(passed, files, msg || ('not: ' + files.join(', ')))
 }
 
-function run(generator, args, end) {
-  if (typeof args === 'function') end = args, args = {}
+exports.run = function run(generator, args, cb) {
+  if (typeof args === 'function') cb = args, args = {}
 
-  let ctx = helpers.run(join(SRC, generator))
-  let { options = {}, prompts = {} } = args || {}
+  function next(fn = queue.shift()) {
+    if (fn) setImmediate(fn)
+    else queue.running = false
+  }
 
-  ctx.withOptions(options).withPrompts(prompts)
-  if (end) ctx.on('end', end)
+  function start() {
+    let ctx = helpers.run(join(SRC, generator))
+    let { options = {}, prompts = {} } = args || {}
 
-  return ctx
+    ctx.withOptions(options).withPrompts(prompts)
+
+    function end(err) {
+      next()
+      if (cb) cb(err)
+    }
+
+    ctx.on('end', end).on('error', end)
+
+    if (start.init) start.init(ctx)
+  }
+
+  if (!queue.running) {
+    queue.running = true
+    next(start)
+  } else {
+    queue.push(start)
+  }
+
+  return function setInit(fn) {
+    start.init = fn
+  }
 }
 
-exports.files = files
-exports.notFiles = notFiles
-exports.run = run
+exports.fixture = function fixture(path) {
+  return join(FIXTURE, path)
+}
+
+exports.read = function read(path, encoding = 'utf8') {
+  return fs.readFileSync(path, encoding)
+}
