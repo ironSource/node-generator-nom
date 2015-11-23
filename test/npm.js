@@ -1,11 +1,11 @@
 const test = require('tape')
     , fs = require('fs')
-
-const { files, notFiles, run, fixture, read } = require('./util')
+  , { files, notFiles, fixture, read } = require('./util')
+    , run = require('./util/runner')('generators/npm')
 
 test('main option', (t) => {
   function main(option, expected, msg, next) {
-    run('npm', { options: { main: option }}, (err) => {
+    run({ options: { main: option }}, (err) => {
       if (expected !== null) {
         if (option === false) notFiles(t, expected, msg)
         else files(t, expected, msg)
@@ -27,32 +27,32 @@ test('main option', (t) => {
 test('modules option', (t) => {
   t.plan(6)
 
-  run('npm', {}, () => {
+  run(() => {
     let expected = read(fixture('npm/index-cjs.js'))
     t.equal(read('index.js'), expected, 'defaults to CommonJS')
   })
 
-  run('npm', { options: { modules: 'CommonJS'} }, () => {
+  run({ options: { modules: 'CommonJS'} }, () => {
     let expected = read(fixture('npm/index-cjs.js'))
     t.equal(read('index.js'), expected, 'CommonJS')
   })
 
-  run('npm', { options: { modules: 'commonjs'} }, () => {
+  run({ options: { modules: 'commonjs'} }, () => {
     let expected = read(fixture('npm/index-cjs.js'))
     t.equal(read('index.js'), expected, 'commonjs')
   })
 
-  run('npm', { options: { modules: 'ES6'} }, () => {
+  run({ options: { modules: 'ES6'} }, () => {
     let expected = read(fixture('npm/index-esm.js'))
     t.equal(read('index.js'), expected, 'ES6')
   })
 
-  run('npm', { options: { modules: 'es6'} }, () => {
+  run({ options: { modules: 'es6'} }, () => {
     let expected = read(fixture('npm/index-esm.js'))
     t.equal(read('index.js'), expected, 'es6')
   })
 
-  run('npm', { options: { modules: 'invalid' }}, (err) => {
+  run({ options: { modules: 'invalid' }}, (err) => {
     t.ok(err, 'invalid option')
   })
 })
