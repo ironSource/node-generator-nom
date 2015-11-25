@@ -44,7 +44,7 @@ Add `readme.md` with common sections and [shield.io](https://shield.io) badges f
 
 ### `gulp`
 
-Create an ES5 or ES6 gulpfile and `tasks` directory.
+Create an ES5 or ES6 gulpfile and `tasks` directory. Installs `gulp` and if ES6, `babel-core`.
 
 ## usage
 
@@ -61,6 +61,23 @@ Install Yeoman and generator-nom globally with [npm](https://npmjs.org):
 ```
 npm i yo generator-nom -g
 ```
+
+## changelog
+
+### 2.0.0
+
+- Gulpfile can be in ES5 or ES6.
+- Disable gulp subgenerator by default
+- A `package.json` will always be created (for example, when running `nom:gulp` by itself).
+- Generation of main file (`index.js`) is optional
+- Move CLI to own subgenerator, with new questions for name and path.
+- Preserve sort order of existing `package.json`, except for dependencies which are always sorted lexicographically (like npm does).
+- CI targets node 0.10 and 4
+- Install latest npm on AppVeyor
+- Deduce author's name and email from (in order): author field of existing `package.json`, npm config (legacy formats too) and git config. Because Yeoman reads the git config by spawning git, it is done lazily, as a last resort.
+- Don't humanize author's URL, to keep it "clickable" in editors and other places
+- Author URL is optional
+- Pin Babel to 5
 
 ## license and acknowledgments
 
