@@ -314,7 +314,7 @@ const self = module.exports = class NpmGenerator extends Conditional {
       pack[key] = deepSortObject(ctx[key])
     })
 
-    let { node = '>=0.10.0', npm = '>=2.0.0', ...restEngines } = pack.engines || {}
+    let { node = '>=4.0.0', npm = '>=2.0.0', ...restEngines } = pack.engines || {}
     pack.engines = { node, npm, ...restEngines }
 
     this.fs.writeJSON(this.destinationPath('package.json'), pack)
