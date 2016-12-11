@@ -137,7 +137,6 @@ const self = module.exports = class NpmGenerator extends Conditional {
         license: license || 'MIT',
         testFramework,
         name: author.name,
-        copyrightHolder: this.config.get('copyrightHolder'),
         email: author.email,
         url: author.url,
         keywords: (keywords || []).filter(k => k).join(' ')
@@ -199,7 +198,7 @@ const self = module.exports = class NpmGenerator extends Conditional {
     {
       name: 'copyrightHolder',
       message: 'Who or what entity is the copyright holder?',
-      default: answers => defaults.copyrightHolder || answers.name,
+      default: answers => answers.name,
       validate: val => val.length ? true : 'You have to provide a copyright holder'
     },
     {
@@ -285,8 +284,6 @@ const self = module.exports = class NpmGenerator extends Conditional {
       ctx.devDependencies = saveDeps.devDependencies
 
       this.ctx = ctx
-      this.config.set('copyrightHolder', ctx.copyrightHolder)
-
       done()
     })
   }
