@@ -196,32 +196,40 @@ const self = module.exports = class NpmGenerator extends Conditional {
       validate: val => val.length ? true : 'You have to provide a name'
     },
     {
-      name: 'copyrightHolder',
-      message: 'Who or what entity is the copyright holder?',
-      default: answers => answers.name,
-      validate: val => val.length ? true : 'You have to provide a copyright holder'
+      name: 'enableEmail',
+      message: 'Do you want to set author.email?', // TODO: rephrase
+      type: 'confirm',
+      store: true,
+      default: !!defaults.email
     },
     {
       name: 'email',
-      message: 'What is your email address?',
+      message: 'Nice. What is your email?',
       store: true,
+      when: (answers) => answers.enableEmail,
       default: defaults.email,
       validate: val => val.length ? true : 'You have to provide an email address'
     },
     {
       name: 'enableUrl',
-      message: 'Do you want to list a website?',
+      message: 'Do you want to set author.url?',  // TODO: rephrase
       type: 'confirm',
       store: true,
-      default: true
+      default: !!defaults.url
     },
     {
       name: 'url',
-      message: 'What is the URL of your website?',
+      message: 'Will do, what\'s your url?',
       store: true,
       when: (answers) => answers.enableUrl,
       default: defaults.url,
       filter: normalOrEmptyUrl
+    },
+    {
+      name: 'copyrightHolder',
+      message: 'Who or what entity is the copyright holder?',
+      default: answers => answers.name,
+      validate: val => val.length ? true : 'You have to provide a copyright holder'
     },
     {
       name: 'keywords',
@@ -304,8 +312,14 @@ const self = module.exports = class NpmGenerator extends Conditional {
       pack.main = ctx.main
     }
 
-    pack.author = { name: ctx.name, email: ctx.email }
-    if (ctx.enableUrl && ctx.url) pack.author.url = ctx.url
+    if (!ctx.enableEmail && !ctx.enableUrl) {
+      pack.author = ctx.name
+    } else {
+      pack.author = { name: ctx.name }
+
+      if (ctx.enableEmail && ctx.email) pack.author.email = ctx.email
+      if (ctx.enableUrl && ctx.url) pack.author.url = ctx.url
+    }
 
     if (!pack.scripts) pack.scripts = {}
     if (!pack.scripts.test && ctx.testCommand) pack.scripts.test = ctx.testCommand
