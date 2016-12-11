@@ -6,15 +6,13 @@
 
 ## example
 
-`npm i <%= packageName %>`
-
 ```js
 const <%= camelCaseName %> = require('<%= packageName %>')
 ```
 
 ## api
 
-### `main(arg[,opts])`
+### `<%= camelCaseName %>(arg, [opts])`
 
 ## install
 
