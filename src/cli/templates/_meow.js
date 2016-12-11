@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 'use strict';
 
-var meow = require('meow')
-  , <%= camelModuleName %> = require('./')
+const meow = require('meow')
+    , <%= camelModuleName %> = require('./')
 
-var cli = meow({
+const cli = meow({
   help: [
     'Usage',
     '  $ <%= binName %> [input]',

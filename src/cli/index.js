@@ -3,6 +3,8 @@
 const Conditional = require('../conditional-subgen')
     , camelCase = require('camel-case')
     , paramCase = require('param-case')
+    , colors = require('chalk')
+    , pad = require('pad-right')
 
 function paramCasePath(path) {
   path = path.toLowerCase()
@@ -12,6 +14,30 @@ function paramCasePath(path) {
     if (k === '.') return i === 0 ? '.' : ''
     return paramCase(k)
   }).filter(k=>k).join('/')
+}
+
+const CLI_MODULES = {
+  none: {
+    value: null
+  },
+  minimist: {
+    url: 'https://github.com/substack/minimist',
+    dependencies: {
+      minimist: null
+    }
+  },
+  yargs: {
+    url: 'http://yargs.js.org',
+    dependencies: {
+      yargs: null
+    }
+  },
+  meow: {
+    url: 'https://github.com/sindresorhus/meow',
+    dependencies: {
+      meow: null
+    }
+  }
 }
 
 module.exports = class CliGenerator extends Conditional {
@@ -62,6 +88,21 @@ module.exports = class CliGenerator extends Conditional {
       default: prevBinName || pack.name,
       validate: (val) => paramCase(val).length ? true : 'You have to provide a name',
       filter: (val) => paramCase(val)
+    }, {
+      name: 'cliModule',
+      message: 'Select a cli module',
+      type: 'list',
+      choices: Object.keys(CLI_MODULES).map(key => {
+        const mod = CLI_MODULES[key]
+            , name = mod.url ? pad(key, 10, ' ') + colors.gray(mod.url) : key
+
+        return { name: name, value: 'value' in mod ? mod.value : key }
+      }),
+      validate: (choice) => { // Used to validate option
+        let choices = Object.keys(CLI_MODULES)
+        if (choices.indexOf(choice) >= 0) return true
+        return 'Must be one of ' + JSON.stringify(choices, null, 2)
+      }
     }]
 
     let done = this.async()
@@ -78,14 +119,17 @@ module.exports = class CliGenerator extends Conditional {
     let pack = this.pack
     if (!pack) return
 
-    let { path, binName } = this.answers
+    let { path, binName, cliModule } = this.answers
+
     let moduleName = pack.name
       , camelModuleName = camelCase(moduleName)
 
-    this.fs.copyTpl
-      ( this.templatePath('_cli.js')
-      , this.destinationPath(path)
-      , { camelModuleName, binName })
+    if (cliModule) {
+      this.fs.copyTpl
+        ( this.templatePath('_' + cliModule + '.js')
+        , this.destinationPath(path)
+        , { camelModuleName, binName })
+    }
 
     let binField = binName === moduleName ? path : { [binName]: path }
 
@@ -110,6 +154,10 @@ module.exports = class CliGenerator extends Conditional {
     }
 
     this.fs.writeJSON('package.json', pack)
-    this.saveDependencies({ meow: null }, { dev: true }, this.async())
+
+    // TODO: ask to keep previous module(s)
+    if (cliModule) {
+      this.saveDependencies(CLI_MODULES[cliModule].dependencies, this.async())
+    }
   }
 }
