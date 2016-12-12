@@ -37,6 +37,12 @@ const CLI_MODULES = {
     dependencies: {
       meow: null
     }
+  },
+  commander: {
+    url: 'https://github.com/tj/commander.js',
+    dependencies: {
+      commander: null
+    }
   }
 }
 
