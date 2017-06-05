@@ -154,7 +154,7 @@ const self = module.exports = class NomGenerator extends Base {
 
     if (!questions.length) return done()
 
-    this.prompt((questions, answers) => {
+    this.prompt(questions, (answers) => {
       let primary = answers.primary || []
       let secondary = answers.secondary || []
 
