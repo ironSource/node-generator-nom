@@ -192,14 +192,14 @@ const self = module.exports = class NpmGenerator extends Conditional {
     },
     {
       name: 'name',
-      message: 'What is your full name?',
+      message: 'For author, what is your full name?',
       store: true,
       default: defaults.name,
       validate: val => val.length ? true : 'You have to provide a name'
     },
     {
       name: 'enableEmail',
-      message: 'Do you want to set author.email?', // TODO: rephrase
+      message: 'For author, want to provide an email address?',
       type: 'confirm',
       store: true,
       default: !!defaults.email
@@ -214,14 +214,14 @@ const self = module.exports = class NpmGenerator extends Conditional {
     },
     {
       name: 'enableUrl',
-      message: 'Do you want to set author.url?',  // TODO: rephrase
+      message: 'For author, want to provide a public URL?',
       type: 'confirm',
       store: true,
       default: !!defaults.url
     },
     {
       name: 'url',
-      message: 'Will do, what\'s your url?',
+      message: 'Will do, what\'s your URL?',
       store: true,
       when: (answers) => answers.enableUrl,
       default: defaults.url,
