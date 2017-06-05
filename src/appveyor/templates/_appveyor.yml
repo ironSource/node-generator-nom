@@ -11,7 +11,6 @@ environment:
 
 install:
   - ps: Install-Product node $env:nodejs_version
-  - npm -g i npm@latest
   - set PATH=%APPDATA%\npm;%PATH%;%APPVEYOR_BUILD_FOLDER%\node_modules\.bin
   - npm i
 
