@@ -7,6 +7,7 @@ const Conditional = require('../conditional-subgen')
     , guessAuthor = require('./guess-author')
     , mkdirp = require('mkdirp')
     , deepSortObject = require('./deep-sort-object')
+    , paramCaseName = require('./param-case-name')
 
 const strictString = require('../app/option-parser').strictString
 
@@ -129,7 +130,7 @@ const self = module.exports = class NpmGenerator extends Conditional {
         devDependencies,
         main,
         version: version || '0.0.1',
-        moduleName: name ? paramCase(name) : paramCase(this.appname),
+        moduleName: paramCaseName(name || this.appname),
         description: description || 'my module',
         license: license || 'MIT',
         testFramework,
@@ -164,7 +165,7 @@ const self = module.exports = class NpmGenerator extends Conditional {
       message: 'What do you want to name your module?',
       default: defaults.moduleName,
       validate: val => val.length ? true : 'You have to provide a module name',
-      filter: paramCase
+      filter: paramCaseName
     },
     {
       name: 'description',

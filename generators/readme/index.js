@@ -3,6 +3,7 @@
 const Conditional = require('../conditional-subgen')
     , parseAuthor = require('parse-author')
     , camel = require('camel-case')
+    , stripScope = require('./strip-scope')
 
 const self = module.exports = class ReadmeGenerator extends Conditional {
   // TODO: use new fs API
@@ -14,7 +15,7 @@ const self = module.exports = class ReadmeGenerator extends Conditional {
     }
 
     this.packageName = pkg.name
-    this.camelCaseName = camel(pkg.name)
+    this.camelCaseName = camel(stripScope(pkg.name))
 
     let author = pkg.author
       , copyrightHolder = this.config.get('copyrightHolder')
