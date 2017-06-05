@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 const Conditional = require('../conditional-subgen')
     , AppVeyor = require('appveyor')
@@ -17,7 +17,7 @@ const self = module.exports = class AppVeyorGenerator extends Conditional {
       message: 'What is your AppVeyor token?',
       filter: val => (typeof val === 'string' ? val.trim() : '')
     }], answers => {
-      let { token } = answers
+      let token = answers.token
 
       if (!token) {
         this.log.error('A token is required to access AppVeyor on your behalf.')

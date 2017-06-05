@@ -1,7 +1,7 @@
-'use strict';
+'use strict'
 
 const Conditional = require('../conditional-subgen')
-const { looseBoolean } = require('../app/option-parser')
+const looseBoolean = require('../app/option-parser').looseBoolean
 
 const self = module.exports = class GulpGenerator extends Conditional {
   constructor(args, options, config) {

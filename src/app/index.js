@@ -1,8 +1,8 @@
-'use strict';
+'use strict'
 
 const after = require('after')
-const { Base } = require('yeoman-generator')
-const { looseBoolean, strictString } = require('./option-parser')
+const Base = require('yeoman-generator').Base
+const optParser = require('./option-parser')
 
 const subgenerators =
   [ 'npm'
@@ -25,7 +25,7 @@ const self = module.exports = class NomGenerator extends Base {
         desc: 'Module option passed to every subgenerator'
       })
 
-      this.options[option] = strictString(this.options[option], undefined)
+      this.options[option] = optParser.strictString(this.options[option], undefined)
     })
 
     // "--esnext" or "--no-esnext" or "--esnext true"
@@ -34,7 +34,7 @@ const self = module.exports = class NomGenerator extends Base {
       desc: `Use ES6 when possible or never (--no-esnext)`
     })
 
-    this.options.esnext = looseBoolean(this.options.esnext, undefined)
+    this.options.esnext = optParser.looseBoolean(this.options.esnext, undefined)
 
     // "--modules es6"
     this.option('modules', {
@@ -44,7 +44,7 @@ const self = module.exports = class NomGenerator extends Base {
 
     let modules
       = this.options.modules
-      = strictString(this.options.modules, undefined)
+      = optParser.strictString(this.options.modules, undefined)
 
     if (modules !== undefined) {
       modules = this.options.modules = modules.toLowerCase()
@@ -96,7 +96,11 @@ const self = module.exports = class NomGenerator extends Base {
       let path = require.resolve(`../${subgen}`)
         , Generator = require(path)
 
-      let { task, shouldRun, regenerate, runByDefault = true } = Generator
+      let task = Generator.task
+      let shouldRun = Generator.shouldRun
+      let regenerate = Generator.regenerate
+      let runByDefault = Generator.runByDefault == null ? true : !!Generator.runByDefault
+
       let generatorOptions = this._getGeneratorOptions(subgen)
 
       shouldRun(this, generatorOptions, (err, should) => {
@@ -150,8 +154,10 @@ const self = module.exports = class NomGenerator extends Base {
 
     if (!questions.length) return done()
 
-    this.prompt(questions, answers => {
-      let { primary = [], secondary = [] } = answers
+    this.prompt((questions, answers) => {
+      let primary = answers.primary || []
+      let secondary = answers.secondary || []
+
       this.tasksToRun = this.tasksToRun.concat(primary).concat(secondary)
       done()
     })
@@ -169,15 +175,13 @@ const self = module.exports = class NomGenerator extends Base {
   }
 
   _getGeneratorOptions(generator) {
-    let { name, description, esnext, modules, skipInstall, skipCache } = this.options
-
     return Object.assign({
-      name,
-      description,
-      esnext,
-      modules,
-      skipInstall,
-      skipCache
+      name: this.options.name,
+      description: this.options.description,
+      esnext: this.options.esnext,
+      modules: this.options.modules,
+      skipInstall: this.options.skipInstall,
+      skipCache: this.options.skipCache
     }, this.options[generator])
   }
 }

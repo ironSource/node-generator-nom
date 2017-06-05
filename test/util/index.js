@@ -1,6 +1,8 @@
+'use strict'
+
 const exists = require('path-exists')
     , fs = require('fs')
-  , { resolve } = require('path')
+    , resolve = require('path').resolve
 
 exports.files = function files(t, files, msg) {
   files = [].concat(files)
@@ -18,6 +20,6 @@ exports.fixture = function fixture(path) {
   return resolve(__dirname, '..', 'fixtures', path)
 }
 
-exports.read = function read(path, encoding = 'utf8') {
-  return fs.readFileSync(path, encoding)
+exports.read = function read(path, encoding) {
+  return fs.readFileSync(path, encoding || 'utf8')
 }

@@ -1,3 +1,5 @@
+'use strict'
+
 function looseBoolean(value, notSet) {
   if (typeof value === 'boolean') {
     return value

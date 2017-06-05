@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 // Adapted from github.com/npm/npm/blob/master/lib/utils/deep-sort-object.js
 

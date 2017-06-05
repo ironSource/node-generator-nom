@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 const Conditional = require('../conditional-subgen')
     , paramCase = require('param-case')
@@ -8,7 +8,7 @@ const Conditional = require('../conditional-subgen')
     , mkdirp = require('mkdirp')
     , deepSortObject = require('./deep-sort-object')
 
-const { strictString } = require('../app/option-parser')
+const strictString = require('../app/option-parser').strictString
 
 const LICENSE_TEMPLATES = [ 'mit', 'bsd2', 'bsd3' ]
 
@@ -95,13 +95,15 @@ const self = module.exports = class NpmGenerator extends Conditional {
   }
 
   _getDefaults(done) {
-    let { name, description
-        , author, license
-        , devDependencies = {}
-        , dependencies = {}
-        , version, keywords
-        , main
-        } = this.pack
+    let name = this.pack.name
+    let description = this.pack.description
+    let author = this.pack.author
+    let license = this.pack.license
+    let devDependencies = this.pack.devDependencies || {}
+    let dependencies = this.pack.dependencies || {}
+    let version = this.pack.version
+    let keywords = this.pack.keywords
+    let main = this.pack.main
 
     guessAuthor(author, this.user.git, (err, author) => {
       if (err) return done(err)
@@ -298,7 +300,8 @@ const self = module.exports = class NpmGenerator extends Conditional {
 
   // Note: the order in which we set fields matters for new packages.
   _writePackage() {
-    let { ctx, pack } = this
+    let ctx = this.ctx
+    let pack = this.pack
 
     pack.name = ctx.moduleName
 

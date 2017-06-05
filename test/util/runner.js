@@ -1,5 +1,7 @@
-const { resolve } = require('path')
-    , { test: helpers } = require('yeoman-generator')
+'use strict'
+
+const resolve = require('path').resolve
+    , helpers = require('yeoman-generator').test
     , omit = require('lodash.omit')
 
 // Because Yeoman changes working directory, get it early
@@ -9,7 +11,7 @@ function unhandled(err) {
   if (err) throw err
 }
 
-module.exports = function runner(opts) {
+module.exports = function runner (opts) {
   if (typeof opts === 'string') opts = { root: opts }
   else if (!opts) opts = {}
 
@@ -17,12 +19,17 @@ module.exports = function runner(opts) {
   const queue = opts.queue || []
   const sharedSpec = omit(opts, ['root', 'queue'])
 
-  function next(fn = queue.shift()) {
+  function next (fn) {
+    fn = fn || queue.shift()
     if (fn) setImmediate(fn)
     else queue.running = false
   }
 
-  return function run(generator = '.', spec = {}, done = unhandled) {
+  return function run (generator, spec, done) {
+    generator = generator || '.'
+    spec = spec || {}
+    done = done || unhandled
+
     if (typeof generator === 'function') { // (done)
       done = generator, generator = '.'
     } else if (typeof generator !== 'string') { // (spec[, done])
@@ -32,7 +39,11 @@ module.exports = function runner(opts) {
     }
 
     const merged = Object.assign({}, sharedSpec, spec)
-      , { options, prompts, args, config, generators } = merged
+        , options = merged.options
+        , prompts = merged.prompts
+        , args = merged.args
+        , config = merged.config
+        , generators = merged.generators
         , path = resolve(CWD, root, generator)
 
     function start() {

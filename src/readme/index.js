@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 const Conditional = require('../conditional-subgen')
     , parseAuthor = require('parse-author')

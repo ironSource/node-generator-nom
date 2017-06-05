@@ -1,17 +1,15 @@
-'use strict';
+'use strict'
 
 const ConfigStore = require('configstore')
     , after = require('after')
     , latest = require('latest-version')
+    , Base = require('yeoman-generator').Base
 
-const { name: moduleName, bugs } = require('../package.json')
-const { Base } = require('yeoman-generator')
+const pkg = require('../package.json')
+const moduleName = pkg.name
+const bugs = pkg.bugs
 
 const self = module.exports = class ConditionalGenerator extends Base {
-  static getSettings() {
-    return self.settings || (self.settings = new ConfigStore(moduleName))
-  }
-
   constructor(args, options, config) {
     super(args, options, config)
     this.settings = self.getSettings()
@@ -51,7 +49,7 @@ const self = module.exports = class ConditionalGenerator extends Base {
 
     names.forEach(dep => {
       let wished = deps[dep]
-      let { version: installed } = this.fs.readJSON(this.destinationPath(`node_modules/${dep}/package.json`), {})
+      let installed = this.fs.readJSON(this.destinationPath(`node_modules/${dep}/package.json`), {}).version
 
       if (wished || installed) {
         output[dep] = wished || ('~' + installed)
@@ -73,4 +71,8 @@ const self = module.exports = class ConditionalGenerator extends Base {
   moduleBugs() {
     return bugs
   }
+}
+
+self.getSettings = function () {
+  return self.settings || (self.settings = new ConfigStore(moduleName))
 }

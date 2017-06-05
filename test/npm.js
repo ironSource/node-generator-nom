@@ -1,14 +1,16 @@
+'use strict'
+
 const test = require('tape')
     , fs = require('fs')
-  , { files, notFiles, fixture, read } = require('./util')
+    , u = require('./util')
     , run = require('./util/runner')('src/npm')
 
 test('main option', (t) => {
   function main(option, expected, msg, next) {
     run({ options: { main: option }}, (err) => {
       if (expected !== null) {
-        if (option === false) notFiles(t, expected, msg)
-        else files(t, expected, msg)
+        if (option === false) u.notFiles(t, expected, msg)
+        else u.files(t, expected, msg)
       }
       next && next(err)
     })
@@ -28,28 +30,28 @@ test('modules option', (t) => {
   t.plan(6)
 
   run(() => {
-    let expected = read(fixture('npm/index-cjs.js'))
-    t.equal(read('index.js'), expected, 'defaults to CommonJS')
+    let expected = u.read(u.fixture('npm/index-cjs.js'))
+    t.equal(u.read('index.js'), expected, 'defaults to CommonJS')
   })
 
   run({ options: { modules: 'CommonJS'} }, () => {
-    let expected = read(fixture('npm/index-cjs.js'))
-    t.equal(read('index.js'), expected, 'CommonJS')
+    let expected = u.read(u.fixture('npm/index-cjs.js'))
+    t.equal(u.read('index.js'), expected, 'CommonJS')
   })
 
   run({ options: { modules: 'commonjs'} }, () => {
-    let expected = read(fixture('npm/index-cjs.js'))
-    t.equal(read('index.js'), expected, 'commonjs')
+    let expected = u.read(u.fixture('npm/index-cjs.js'))
+    t.equal(u.read('index.js'), expected, 'commonjs')
   })
 
   run({ options: { modules: 'ES6'} }, () => {
-    let expected = read(fixture('npm/index-esm.js'))
-    t.equal(read('index.js'), expected, 'ES6')
+    let expected = u.read(u.fixture('npm/index-esm.js'))
+    t.equal(u.read('index.js'), expected, 'ES6')
   })
 
   run({ options: { modules: 'es6'} }, () => {
-    let expected = read(fixture('npm/index-esm.js'))
-    t.equal(read('index.js'), expected, 'es6')
+    let expected = u.read(u.fixture('npm/index-esm.js'))
+    t.equal(u.read('index.js'), expected, 'es6')
   })
 
   run({ options: { modules: 'invalid' }}, (err) => {

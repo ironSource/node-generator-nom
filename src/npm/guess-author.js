@@ -1,3 +1,5 @@
+'use strict'
+
 const npmconf = require('npmconf')
     , parseAuthor = require('parse-author')
     , normalOrEmptyUrl = require('./normal-or-empty-url')

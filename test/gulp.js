@@ -1,6 +1,8 @@
+'use strict'
+
 const test = require('tape')
     , fs = require('fs')
-  , { files, notFiles } = require('./util')
+    , u = require('./util')
     , run = require('./util/runner')('src/gulp')
 
 test('esnext', (t) => {
@@ -10,32 +12,32 @@ test('esnext', (t) => {
   t.test('esnext option true', (t) => {
     t.plan(2)
     run({ options: { esnext: true }}, () => {
-      files(t, ES6)
-      notFiles(t, ES5)
+      u.files(t, ES6)
+      u.notFiles(t, ES5)
     })
   })
 
   t.test('esnext option false', (t) => {
     t.plan(2)
     run({ options: { esnext: false }}, () => {
-      files(t, ES5)
-      notFiles(t, ES6)
+      u.files(t, ES5)
+      u.notFiles(t, ES6)
     })
   })
 
   t.test('esnext prompt true', (t) => {
     t.plan(2)
     run({ prompts: { esnext: true }}, () => {
-      files(t, ES6)
-      notFiles(t, ES5)
+      u.files(t, ES6)
+      u.notFiles(t, ES5)
     })
   })
 
   t.test('esnext prompt false', (t) => {
     t.plan(2)
     run({ prompts: { esnext: false }}, () => {
-      files(t, ES5)
-      notFiles(t, ES6)
+      u.files(t, ES5)
+      u.notFiles(t, ES6)
     })
   })
 
@@ -43,15 +45,15 @@ test('esnext', (t) => {
     t.plan(2)
 
     run({options: { esnext: true }, prompts: { esnext: false }}, () => {
-      files(t, ES6)
-      notFiles(t, ES5)
+      u.files(t, ES6)
+      u.notFiles(t, ES5)
     })
   })
 })
 
 test('creates example gulp task', (t) => {
   t.plan(1)
-  run(() => files(t, ['tasks/build.js']))
+  run(() => u.files(t, ['tasks/build.js']))
 })
 
 test('saves dependencies', (t) => {

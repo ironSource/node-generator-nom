@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 const Conditional = require('../conditional-subgen')
     , camelCase = require('camel-case')
@@ -117,7 +117,9 @@ const self = module.exports = class CliGenerator extends Conditional {
     let pack = this.pack
     if (!pack) return
 
-    let { path, binName, cliModule } = this.answers
+    let path = this.answers.path
+    let binName = this.answers.binName
+    let cliModule = this.answers.cliModule
 
     let moduleName = pack.name
       , camelModuleName = camelCase(moduleName)
@@ -165,6 +167,6 @@ self.regenerate = 'Recreate CLI app'
 self.runByDefault = false
 
 self.shouldRun = function (ctx, opts, done) {
-  let { bin } = ctx.fs.readJSON('package.json', {})
+  let bin = ctx.fs.readJSON('package.json', {}).bin
   done(null, !bin)
 }

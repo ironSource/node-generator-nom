@@ -1,3 +1,5 @@
+'use strict'
+
 const normalizeUrl = require('normalize-url')
 
 module.exports = function(url) {

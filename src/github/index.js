@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 const Conditional = require('../conditional-subgen')
     , git = require('gift')
@@ -23,7 +23,9 @@ const self = module.exports = class GithubGenerator extends Conditional {
         return done()
       }
 
-      let { name: moduleName, description } = this.fs.readJSON('package.json', {})
+      let _pkg = this.fs.readJSON('package.json', {})
+      let moduleName = _pkg.name
+      let description = _pkg.description
 
       if (!moduleName) {
         return done(new Error(
@@ -41,8 +43,8 @@ const self = module.exports = class GithubGenerator extends Conditional {
           moduleName,
           'node-' + moduleName
         ]
-      }], answers => {
-        let { repositoryName } = answers
+      }], (answers) => {
+        let repositoryName = answers.repositoryName
 
         this._create(repo, repositoryName, description, 0, (err, qualifiedName) => {
           this.qualifiedName = qualifiedName
@@ -86,7 +88,7 @@ const self = module.exports = class GithubGenerator extends Conditional {
           default: defaultOwner,
           filter: (v) => (typeof v === 'string' ? v.trim() : '')
         }], answers => {
-          let { owner } = answers
+          let owner = answers.owner
           let isDefaultOwner = owner.toLowerCase() === defaultOwner.toLowerCase()
 
           if (!owner) {
@@ -145,7 +147,7 @@ const self = module.exports = class GithubGenerator extends Conditional {
       name: 'token',
       message: 'What is your GitHub token?' ,
     }], props => {
-      let { token } = props
+      let token = props.token
 
       if (!token) {
         this.log.error (
@@ -179,7 +181,7 @@ const self = module.exports = class GithubGenerator extends Conditional {
   }
 
   writing() {
-    let { qualifiedName } = this
+    let qualifiedName = this.qualifiedName
 
     if (!qualifiedName) {
       return this.log.skip('Update URLs of package.json - no GitHub repository name set')
