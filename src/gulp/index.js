@@ -4,13 +4,6 @@ const Conditional = require('../conditional-subgen')
 const { looseBoolean } = require('../app/option-parser')
 
 const self = module.exports = class GulpGenerator extends Conditional {
-  static task = 'Install gulp 3.9 and create gulpfile'
-  static regenerate = 'Reinstall gulp 3.9 and recreate gulpfile'
-  static runByDefault = false
-  static shouldRun(ctx, opts, done) {
-    done(null, !ctx.fs.exists('gulpfile.js') && !ctx.fs.exists('gulpfile.babel.js'))
-  }
-
   constructor(args, options, config) {
     super(args, options, config)
 
@@ -64,7 +57,7 @@ const self = module.exports = class GulpGenerator extends Conditional {
       this._copyTpl('_gulpfile.js', 'gulpfile.js')
     }
 
-    let ctx = this.options.ctx ? {...this.ctx, ...this.options.ctx } : this.ctx
+    let ctx = Object.assign({}, this.ctx, this.options.ctx)
       , tasks = [].concat(this.options.tasks)
 
     this.fs.copyTpl(tasks, this.destinationPath('tasks'), ctx)
@@ -75,4 +68,12 @@ const self = module.exports = class GulpGenerator extends Conditional {
   _copyTpl(src, dest) {
     this.fs.copyTpl(this.templatePath(src), this.destinationPath(dest), this.ctx)
   }
+}
+
+self.task = 'Install gulp 3.9 and create gulpfile'
+self.regenerate = 'Reinstall gulp 3.9 and recreate gulpfile'
+self.runByDefault = false
+
+self.shouldRun = function (ctx, opts, done) {
+  done(null, !ctx.fs.exists('gulpfile.js') && !ctx.fs.exists('gulpfile.babel.js'))
 }

@@ -1,7 +1,7 @@
 const test = require('tape')
     , fs = require('fs')
   , { files, notFiles, fixture, read } = require('./util')
-    , run = require('./util/runner')('generators/npm')
+    , run = require('./util/runner')('src/npm')
 
 test('main option', (t) => {
   function main(option, expected, msg, next) {

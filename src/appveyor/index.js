@@ -4,13 +4,6 @@ const Conditional = require('../conditional-subgen')
     , AppVeyor = require('appveyor')
 
 const self = module.exports = class AppVeyorGenerator extends Conditional {
-  static task = 'Setup AppVeyor'
-  static regenerate = 'Setup AppVeyor again'
-  static runByDefault = false
-  static shouldRun(ctx, opts, done) {
-    done(null, !ctx.fs.exists('appveyor.yml'))
-  }
-
   prompting() {
     this.appveyor = new WrappedAppVeyor()
     if (this.appveyor.hasToken()) return
@@ -55,6 +48,14 @@ const self = module.exports = class AppVeyorGenerator extends Conditional {
       done()
     })
   }
+}
+
+self.task = 'Setup AppVeyor'
+self.regenerate = 'Setup AppVeyor again'
+self.runByDefault = false
+
+self.shouldRun = function (ctx, opts, done) {
+  done(null, !ctx.fs.exists('appveyor.yml'))
 }
 
 class WrappedAppVeyor extends AppVeyor {

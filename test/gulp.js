@@ -1,7 +1,7 @@
 const test = require('tape')
     , fs = require('fs')
   , { files, notFiles } = require('./util')
-    , run = require('./util/runner')('generators/gulp')
+    , run = require('./util/runner')('src/gulp')
 
 test('esnext', (t) => {
   const ES6 = ['gulpfile.babel.js', '.babelrc']

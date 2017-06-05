@@ -4,13 +4,6 @@ const Conditional = require('../conditional-subgen')
     , travisjs = require.resolve('travisjs/bin/travisjs')
 
 const self = module.exports = class TravisGenerator extends Conditional {
-  static task = 'Setup Travis'
-  static regenerate = 'Setup Travis again'
-  static runByDefault = false
-  static shouldRun(ctx, opts, done) {
-    done(null, !ctx.fs.exists('.travis.yml'))
-  }
-
   writing() {
     this.copy('_.travis.yml', '.travis.yml')
   }
@@ -21,4 +14,12 @@ const self = module.exports = class TravisGenerator extends Conditional {
     let done = this.async()
     this.spawnCommand('node', [travisjs, 'hook']).on('exit', done)
   }
+}
+
+self.task = 'Setup Travis'
+self.regenerate = 'Setup Travis again'
+self.runByDefault = false
+
+self.shouldRun = function (ctx, opts, done) {
+  done(null, !ctx.fs.exists('.travis.yml'))
 }

@@ -5,12 +5,6 @@ const Conditional = require('../conditional-subgen')
     , camel = require('camel-case')
 
 const self = module.exports = class ReadmeGenerator extends Conditional {
-  static task = 'Create readme file'
-  static regenerate = 'Recreate readme file'
-  static shouldRun(ctx, opts, done) {
-    done(null, !ctx.fs.exists('readme.md') && !ctx.fs.exists('readme.markdown') && !ctx.fs.exists('README.md'))
-  }
-
   // TODO: use new fs API
   writing() {
     let pkg = this.fs.readJSON('package.json', false)
@@ -54,4 +48,11 @@ const self = module.exports = class ReadmeGenerator extends Conditional {
 
     this.template('_readme.md', 'readme.md')
   }
+}
+
+self.task = 'Create readme file'
+self.regenerate = 'Recreate readme file'
+
+self.shouldRun = function (ctx, opts, done) {
+  done(null, !ctx.fs.exists('readme.md') && !ctx.fs.exists('readme.markdown') && !ctx.fs.exists('README.md'))
 }

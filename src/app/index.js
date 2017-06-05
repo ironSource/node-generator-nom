@@ -170,7 +170,15 @@ const self = module.exports = class NomGenerator extends Base {
 
   _getGeneratorOptions(generator) {
     let { name, description, esnext, modules, skipInstall, skipCache } = this.options
-    return { name, description, esnext, modules, skipInstall, skipCache, ...this.options[generator] }
+
+    return Object.assign({
+      name,
+      description,
+      esnext,
+      modules,
+      skipInstall,
+      skipCache
+    }, this.options[generator])
   }
 }
 

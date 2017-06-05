@@ -6,26 +6,6 @@ const Conditional = require('../conditional-subgen')
     , pathExists = require('path-exists')
 
 const self = module.exports = class GithubGenerator extends Conditional {
-  static task = 'Host this project on GitHub'
-  static regenerate = false
-  static runByDefault = false
-  static shouldRun(ctx, opts, done) {
-    let repo = self.getRepo(ctx)
-    if (!repo) return done(null, true)
-
-    repo.config((err, cfg) => {
-      if (err) return done(err)
-
-      let origin = cfg.items && cfg.items['remote.origin.url']
-      return done(null, !origin, repo)
-    })
-  }
-
-  static getRepo(ctx) {
-    // Must use real fs to check existence, not yeoman's virtual fs
-    return pathExists.sync(ctx.destinationPath('.git')) ? git(ctx.destinationRoot()) : null
-  }
-
   // Should run after nom:npm.configuring
   configuring() {
     let done = this.async()
@@ -218,4 +198,25 @@ const self = module.exports = class GithubGenerator extends Conditional {
       this.log.error('Cannot update URLs: could not find package.json')
     }
   }
+}
+
+self.task = 'Host this project on GitHub'
+self.regenerate = false
+self.runByDefault = false
+
+self.shouldRun = function (ctx, opts, done) {
+  let repo = self.getRepo(ctx)
+  if (!repo) return done(null, true)
+
+  repo.config((err, cfg) => {
+    if (err) return done(err)
+
+    let origin = cfg.items && cfg.items['remote.origin.url']
+    return done(null, !origin, repo)
+  })
+}
+
+self.getRepo = function (ctx) {
+  // Must use real fs to check existence, not yeoman's virtual fs
+  return pathExists.sync(ctx.destinationPath('.git')) ? git(ctx.destinationRoot()) : null
 }

@@ -1,5 +1,6 @@
 const { resolve } = require('path')
     , { test: helpers } = require('yeoman-generator')
+    , omit = require('lodash.omit')
 
 // Because Yeoman changes working directory, get it early
 const CWD = process.cwd()
@@ -10,8 +11,11 @@ function unhandled(err) {
 
 module.exports = function runner(opts) {
   if (typeof opts === 'string') opts = { root: opts }
+  else if (!opts) opts = {}
 
-  const { root = '.', queue = [], ...sharedSpec } = opts || {}
+  const root = opts.root || '.'
+  const queue = opts.queue || []
+  const sharedSpec = omit(opts, ['root', 'queue'])
 
   function next(fn = queue.shift()) {
     if (fn) setImmediate(fn)
@@ -27,14 +31,9 @@ module.exports = function runner(opts) {
       done = spec, spec = {}
     }
 
-    const merged = {...sharedSpec, ...spec}
-      , { options, prompts, args, config, generators, ...rest } = merged
+    const merged = Object.assign({}, sharedSpec, spec)
+      , { options, prompts, args, config, generators } = merged
         , path = resolve(CWD, root, generator)
-        , unknown = Object.keys(rest)
-
-    if (unknown.length) {
-      throw new Error('Unknown run spec(s): ' + unknown.join(', '))
-    }
 
     function start() {
       const ctx = helpers.run(path)

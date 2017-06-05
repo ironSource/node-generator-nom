@@ -2,6 +2,7 @@
 
 const Conditional = require('../conditional-subgen')
     , paramCase = require('param-case')
+    , omit = require('lodash.omit')
     , normalOrEmptyUrl = require('./normal-or-empty-url')
     , guessAuthor = require('./guess-author')
     , mkdirp = require('mkdirp')
@@ -35,12 +36,6 @@ function paramCasePath(path) {
 }
 
 const self = module.exports = class NpmGenerator extends Conditional {
-  static task = 'Create package.json and common files'
-  static regenerate = 'Recreate package.json and common files'
-  static shouldRun(ctx, opts, done) {
-    done(null, !ctx.fs.readJSON('package.json', false))
-  }
-
   constructor(args, options, config) {
     super(args, options, config)
 
@@ -153,8 +148,13 @@ const self = module.exports = class NpmGenerator extends Conditional {
 
   prompting() {
     // Any question can be skipped by providing an option
-    let { name: moduleName, description, ...rest } = this.options
-    let override = { moduleName, description, ...rest }
+    let moduleName = this.options.name
+    let description = this.options.description
+
+    // Uh, what are we doing here? Refactor someday.
+    let rest = omit(this.options, ['name', 'description'])
+    let override = Object.assign({ moduleName, description }, rest)
+
     let defaults = this.defaults
 
     let questions = [{
@@ -328,8 +328,10 @@ const self = module.exports = class NpmGenerator extends Conditional {
       pack[key] = deepSortObject(ctx[key])
     })
 
-    let { node = '>=4.0.0', npm = '>=2.0.0', ...restEngines } = pack.engines || {}
-    pack.engines = { node, npm, ...restEngines }
+    const engines = pack.engines || {}
+    engines.node = engines.node || '>=4.0.0'
+    engines.npm = engines.npm || '>=2.0.0'
+    pack.engines = deepSortObject(engines)
 
     this.fs.writeJSON(this.destinationPath('package.json'), pack)
   }
@@ -377,6 +379,13 @@ const self = module.exports = class NpmGenerator extends Conditional {
       })
     })
   }
+}
+
+self.task = 'Create package.json and common files'
+self.regenerate = 'Recreate package.json and common files'
+
+self.shouldRun = function (ctx, opts, done) {
+  done(null, !ctx.fs.readJSON('package.json', false))
 }
 
 function isDependencies(key) {

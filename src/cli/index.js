@@ -46,15 +46,7 @@ const CLI_MODULES = {
   }
 }
 
-module.exports = class CliGenerator extends Conditional {
-  static task = 'Create CLI app'
-  static regenerate = 'Recreate CLI app'
-  static runByDefault = false
-  static shouldRun(ctx, opts, done) {
-    let { bin } = ctx.fs.readJSON('package.json', {})
-    done(null, !bin)
-  }
-
+const self = module.exports = class CliGenerator extends Conditional {
   prompting() {
     let pack = this.fs.readJSON('package.json', false)
 
@@ -166,4 +158,13 @@ module.exports = class CliGenerator extends Conditional {
       this.saveDependencies(CLI_MODULES[cliModule].dependencies, this.async())
     }
   }
+}
+
+self.task = 'Create CLI app'
+self.regenerate = 'Recreate CLI app'
+self.runByDefault = false
+
+self.shouldRun = function (ctx, opts, done) {
+  let { bin } = ctx.fs.readJSON('package.json', {})
+  done(null, !bin)
 }

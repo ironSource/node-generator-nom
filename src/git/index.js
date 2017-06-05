@@ -5,12 +5,6 @@ const Conditional = require('../conditional-subgen')
     , pathExists = require('path-exists')
 
 const self = module.exports = class GitGenerator extends Conditional {
-  static task = 'Initialize local git repository'
-  static regenerate = 'Remove and re-initialize local repository'
-  static shouldRun(ctx, opts, done) {
-    done(null, !pathExists.sync(ctx.destinationPath('.git')))
-  }
-
   initializing() {
     let done = this.async()
 
@@ -29,4 +23,11 @@ const self = module.exports = class GitGenerator extends Conditional {
       })
     })
   }
+}
+
+self.task = 'Initialize local git repository'
+self.regenerate = 'Remove and re-initialize local repository'
+
+self.shouldRun = function (ctx, opts, done) {
+  done(null, !pathExists.sync(ctx.destinationPath('.git')))
 }
