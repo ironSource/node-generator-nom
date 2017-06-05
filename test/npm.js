@@ -3,7 +3,7 @@
 const test = require('tape')
     , fs = require('fs')
     , u = require('./util')
-    , run = require('./util/runner')('src/npm')
+    , run = require('./util/runner')('generators/npm')
 
 test('main option', (t) => {
   function main(option, expected, msg, next) {
