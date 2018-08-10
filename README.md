@@ -59,68 +59,6 @@ Install Yeoman and generator-nom globally with [npm](https://npmjs.org):
 npm i yo generator-nom -g
 ```
 
-## Changelog
-
-### Unreleased
-
-This release brings `generator-nom` up to par with latest `yo` and `yeoman-generator`. To install:
-
-```
-npm i yo@latest generator-nom@latest -g
-```
-
-#### Changed
-
-- Upgrade `yeoman-generator` from `~0.21.1` to `~3.1.1`
-- Travis and AppVeyor: upgrade to node 6, 8, 9 and 10
-- Default to private GitHub repo
-- Capitalize README headers
-- Use standard badge style (remove `?style=flat-square`)
-- Link to license file in README
-- Save copyright owner to global settings
-- Set initial `version` in `package.json` to `0.0.0`
-- Make email and url of `author` in `package.json` optional
-- Set `engines.node` in `package.json` to `>=6`
-- Set npm test script to `<runner> test` instead of `<runner> test/**/*.js`
-
-#### Added
-
-- Select `standard` or custom code style
-- Add copyright year (`<year>-present`) to README
-- Add x86 and x64 to AppVeyor matrix
-- Add node version badge to README
-- Choose CLI module (none, `minimist`, `yargs`, `meow`, `commander`)
-- Select copyright owner from previously entered names
-
-#### Removed
-
-- Remove `gulpfile.babel.js`
-- Remove use of `glob` in `gulpfile.js`, prefer explicit `require()`
-- Remove `engines.npm` from `package.json`
-- Remove `shallow_clone: true` from `appveyor.yml`
-- Remove `--main` option
-- Remove creation of `test/` directory
-
-#### Fixed
-
-- Support scoped package names
-- Remove semicolon after `'use strict'` in main file
-
-### 2.0.0
-
-- Gulpfile can be in ES5 or ES6.
-- Disable gulp subgenerator by default
-- A `package.json` will always be created (for example, when running `nom:gulp` by itself).
-- Generation of main file (`index.js`) is optional
-- Move CLI to own subgenerator, with new questions for name and path.
-- Preserve sort order of existing `package.json`, except for dependencies which are always sorted lexicographically (like npm does).
-- CI targets node 0.10 and 4
-- Install latest npm on AppVeyor
-- Deduce author's name and email from (in order): author field of existing `package.json`, npm config (legacy formats too) and git config. Because Yeoman reads the git config by spawning git, it is done lazily, as a last resort.
-- Don't humanize author's URL, to keep it "clickable" in editors and other places
-- Author URL is optional
-- Pin Babel to 5
-
 ## License
 
 [MIT](LICENSE) © 2015-present [ironSource](http://www.ironsrc.com/). Originally forked from [generator-n](https://www.npmjs.com/package/generator-n) © Andrei Kashcha. Small parts borrowed from [generator-nm](https://github.com/sindresorhus/generator-nm) © [Sindre Sorhus](http://sindresorhus.com/).
