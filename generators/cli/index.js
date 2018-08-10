@@ -125,12 +125,10 @@ const self = module.exports = class CliGenerator extends Conditional {
     let moduleName = pack.name
       , camelModuleName = camelCase(moduleName)
 
-    if (cliModule) {
-      this.fs.copyTpl
-        ( this.templatePath('_' + cliModule + '.js')
-        , this.destinationPath(path)
-        , { camelModuleName, binName })
-    }
+    this.fs.copyTpl
+      ( this.templatePath('_' + (cliModule || 'none') + '.js')
+      , this.destinationPath(path)
+      , { camelModuleName, binName })
 
     let binField = binName === moduleName ? path : { [binName]: path }
 
