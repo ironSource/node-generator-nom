@@ -273,7 +273,7 @@ const self = module.exports = class NpmGenerator extends Conditional {
       })
 
       ctx.testFramework = ctx.testFramework === 'none' ? null : ctx.testFramework
-      ctx.testCommand = ctx.testFramework ? ctx.testFramework + ' test/**/*.js' : ''
+      ctx.testCommand = ctx.testFramework ? ctx.testFramework + ' test' : ''
 
       ctx.dependencies || (ctx.dependencies = [])
       ctx.devDependencies || (ctx.devDependencies = [])
