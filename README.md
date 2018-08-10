@@ -6,7 +6,7 @@
 
 ![demo](https://github.com/ironSource/node-generator-nom/raw/master/demo.gif)
 
-## what it does
+## What It Does
 
 *`yo nom`* will ask you which subgenerators to execute, then executes those in order as listed below. Those you successfully ran before will be disabled by default. Run any of them separately with `yo nom:*`. For example: `yo nom:travis` to just setup Travis.
 
@@ -46,7 +46,7 @@ Add `readme.md` with common sections and [shield.io](https://shield.io) badges f
 
 Create an ES5 or ES6 gulpfile and `tasks` directory. Installs `gulp` and if ES6, `babel-core`.
 
-## usage
+## Usage
 
 ```
 mkdir my-module
@@ -54,7 +54,7 @@ cd my-module
 yo nom
 ```
 
-## install
+## Install
 
 Install Yeoman and generator-nom globally with [npm](https://npmjs.org):
 
@@ -62,7 +62,7 @@ Install Yeoman and generator-nom globally with [npm](https://npmjs.org):
 npm i yo generator-nom -g
 ```
 
-## changelog
+## Changelog
 
 ### 2.0.0
 
@@ -79,6 +79,6 @@ npm i yo generator-nom -g
 - Author URL is optional
 - Pin Babel to 5
 
-## license and acknowledgments
+## License
 
 [MIT](http://opensource.org/licenses/MIT) © [ironSource](http://www.ironsrc.com/). Originally forked from [generator-n](https://www.npmjs.com/package/generator-n) © Andrei Kashcha. Small parts borrowed from [generator-nm](https://github.com/sindresorhus/generator-nm) © [Sindre Sorhus](http://sindresorhus.com/).
