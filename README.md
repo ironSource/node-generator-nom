@@ -67,14 +67,22 @@ npm i yo generator-nom -g
 
 ### Unreleased
 
+This release brings `generator-nom` up to par with latest `yo` and `yeoman-generator`. To install:
+
+```
+npm i yo@latest generator-nom@latest -g
+```
+
 #### Changed
 
+- Upgrade `yeoman-generator` from `~0.21.1` to `~3.1.1`
 - Travis and AppVeyor: upgrade to node 6, 8, 9 and 10
 - Default to private GitHub repo
 - Capitalize README headers
 - Use standard badge style (remove `?style=flat-square`)
 - Link to license file in README
-- Save copyright owner to global settings (removes the need for `.yo-rc.json`)
+- Save copyright owner to global settings
+- Set initial `version` in `package.json` to `0.0.0`
 - Make email and url of `author` in `package.json` optional
 - Set `engines.node` in `package.json` to `>=6`
 - Set npm test script to `<runner> test` instead of `<runner> test/**/*.js`
@@ -82,9 +90,9 @@ npm i yo generator-nom -g
 #### Added
 
 - Add copyright year (`<year>-present`) to README
-- Add x86 and x64 to AppVeyor matrix (#15)
+- Add x86 and x64 to AppVeyor matrix
 - Add node version badge to README
-- Choose CLI module (none, `minimist`, `yargs`, `meow`, `commander`) (#9)
+- Choose CLI module (none, `minimist`, `yargs`, `meow`, `commander`)
 - Select copyright owner from previously entered names
 
 #### Removed
@@ -94,10 +102,11 @@ npm i yo generator-nom -g
 - Remove `engines.npm` from `package.json`
 - Remove `shallow_clone: true` from `appveyor.yml`
 - Remove `--main` option
+- Remove creation of `test/` directory
 
 #### Fixed
 
-- Support scoped package names (#12)
+- Support scoped package names
 - Remove semicolon after `'use strict'` in main file
 
 ### 2.0.0
