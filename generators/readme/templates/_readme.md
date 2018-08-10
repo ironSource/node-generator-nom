@@ -1,4 +1,4 @@
-# <%= packageName %>
+# <%= scopelessName %>
 
 > **<%= packageDescription %>**
 

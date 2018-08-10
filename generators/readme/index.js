@@ -15,7 +15,8 @@ const self = module.exports = class ReadmeGenerator extends Conditional {
     }
 
     this.packageName = pkg.name
-    this.camelCaseName = camel(stripScope(pkg.name))
+    this.scopelessName = stripScope(pkg.name)
+    this.camelCaseName = camel(this.scopelessName)
 
     let author = pkg.author
       , copyrightHolder = this.config.get('copyrightHolder')
