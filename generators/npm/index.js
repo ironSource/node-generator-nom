@@ -94,7 +94,7 @@ const self = module.exports = class NpmGenerator extends Conditional {
         dependencies,
         devDependencies,
         main,
-        version: version || '0.0.1',
+        version: version || '0.0.0',
         moduleName: paramCaseName(name || this.appname),
         description: description || 'my module',
         license: license || 'MIT',
