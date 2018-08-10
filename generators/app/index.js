@@ -1,8 +1,7 @@
 'use strict'
 
 const after = require('after')
-const Base = require('yeoman-generator').Base
-const optParser = require('./option-parser')
+const Generator = require('yeoman-generator')
 
 const subgenerators =
   [ 'npm'
@@ -14,37 +13,31 @@ const subgenerators =
   , 'readme'
   , 'gulp' ]
 
-const self = module.exports = class NomGenerator extends Base {
+const self = module.exports = class NomGenerator extends Generator {
   constructor(args, options, config) {
     super(args, options, config)
 
     // "--name beep", "--description boop"
     ;['name', 'description'].forEach(option => {
       this.option(option, {
-        type: 'String',
+        type: String,
         desc: 'Module option passed to every subgenerator'
       })
-
-      this.options[option] = optParser.strictString(this.options[option], undefined)
     })
 
-    // "--esnext" or "--no-esnext" or "--esnext true"
+    // "--esnext" or "--no-esnext"
     this.option('esnext', {
-      type: 'Boolean',
+      type: Boolean,
       desc: `Use ES6 when possible or never (--no-esnext)`
     })
 
-    this.options.esnext = optParser.looseBoolean(this.options.esnext, undefined)
-
     // "--modules es6"
     this.option('modules', {
-      type: 'String',
+      type: String,
       desc: 'Module format, case insensitive: ES6 or CommonJS'
     })
 
-    let modules
-      = this.options.modules
-      = optParser.strictString(this.options.modules, undefined)
+    let modules = this.options.modules
 
     if (modules !== undefined) {
       modules = this.options.modules = modules.toLowerCase()
@@ -61,6 +54,7 @@ const self = module.exports = class NomGenerator extends Base {
       let example = i===0 ? ' (e.g. "git,gulp")' : ''
 
       this.option(option, {
+        type: String,
         desc: `${action} subgenerators${example} and skip questions.`
       })
 
@@ -77,7 +71,7 @@ const self = module.exports = class NomGenerator extends Base {
 
     subgenerators.forEach(subgen => {
       // Note: not supported on command line
-      this.option(subgen, { type: 'Object', default: {}, hide: true })
+      this.option(subgen, { type: (v) => v || {}, default: {}, hide: true })
     })
   }
 
@@ -167,12 +161,10 @@ const self = module.exports = class NomGenerator extends Base {
   _sub(generator) {
     if (this.tasksToRun.indexOf(generator) < 0) return
 
-    let options = this._getGeneratorOptions(generator)
+    const fp = require.resolve(`../${generator}`)
+    const options = this._getGeneratorOptions(generator)
 
-    this.composeWith(`nom:${generator}`, { options, args: [] }, {
-      local: require.resolve(`../${generator}`),
-      link: 'strong'
-    })
+    this.composeWith(fp, options)
   }
 
   _getGeneratorOptions(generator) {

@@ -93,6 +93,7 @@ npm i yo generator-nom -g
 - Remove use of `glob` in `gulpfile.js`, prefer explicit `require()`
 - Remove `engines.npm` from `package.json`
 - Remove `shallow_clone: true` from `appveyor.yml`
+- Remove `--main` option
 
 #### Fixed
 

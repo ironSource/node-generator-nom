@@ -6,7 +6,6 @@ const Conditional = require('../conditional-subgen')
     , stripScope = require('./strip-scope')
 
 const self = module.exports = class ReadmeGenerator extends Conditional {
-  // TODO: use new fs API
   writing() {
     let pkg = this.fs.readJSON('package.json', false)
 
@@ -62,7 +61,11 @@ const self = module.exports = class ReadmeGenerator extends Conditional {
     this.hasTravis = this.fs.exists('.travis.yml')
     this.hasAppVeyor = this.fs.exists('appveyor.yml')
 
-    this.template('_readme.md', 'readme.md')
+    this.fs.copyTpl(
+      this.templatePath('_readme.md'),
+      this.destinationPath('readme.md'),
+      this
+    )
   }
 }
 

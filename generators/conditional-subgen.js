@@ -3,13 +3,13 @@
 const ConfigStore = require('configstore')
     , after = require('after')
     , latest = require('latest-version')
-    , Base = require('yeoman-generator').Base
+    , Generator = require('yeoman-generator')
 
 const pkg = require('../package.json')
 const moduleName = pkg.name
 const bugs = pkg.bugs
 
-const self = module.exports = class ConditionalGenerator extends Base {
+const self = module.exports = class ConditionalGenerator extends Generator {
   constructor(args, options, config) {
     super(args, options, config)
     this.settings = self.getSettings()
@@ -70,6 +70,15 @@ const self = module.exports = class ConditionalGenerator extends Base {
 
   moduleBugs() {
     return bugs
+  }
+
+  prompt (questions) {
+    return super.prompt(questions).then((answers) => {
+      // Yeoman-generator stores config both globally and in the
+      // destination directory. I don't care for that.
+      this.fs.delete(this.destinationPath('.yo-rc.json'))
+      return answers
+    })
   }
 }
 

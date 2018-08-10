@@ -34,7 +34,7 @@ const self = module.exports = class AppVeyorGenerator extends Conditional {
 
   writing() {
     if (this.canceled) return
-    this.copy('_appveyor.yml', 'appveyor.yml')
+    this.fs.copyTpl(this.templatePath('_appveyor.yml'), this.destinationPath('appveyor.yml'))
   }
 
   // The appveyor tool needs git info, so we need to run this

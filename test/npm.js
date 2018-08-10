@@ -5,27 +5,6 @@ const test = require('tape')
     , u = require('./util')
     , run = require('./util/runner')('generators/npm')
 
-test('main option', (t) => {
-  function main(option, expected, msg, next) {
-    run({ options: { main: option } }, (err) => {
-      if (expected !== null) {
-        if (option === false) u.notFiles(t, expected, msg)
-        else u.files(t, expected, msg)
-      }
-      next && next(err)
-    })
-  }
-
-  t.plan(6)
-
-  main(true, 'index.js', 'defaults to index.js (1)')
-  main(undefined, 'index.js', 'defaults to index.js (2)')
-  main(' // libA/index b.js', 'lib-a/index-b.js')
-  main(false, 'index.js', 'can be disabled')
-  main('', null, null, (e) => t.ok(e, 'cannot be empty'))
-  main('.', null, null, (e) => t.ok(e, 'must be param case'))
-})
-
 test('modules option', (t) => {
   t.plan(6)
 

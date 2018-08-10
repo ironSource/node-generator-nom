@@ -5,7 +5,10 @@ const Conditional = require('../conditional-subgen')
 
 const self = module.exports = class TravisGenerator extends Conditional {
   writing() {
-    this.copy('_.travis.yml', '.travis.yml')
+    this.fs.copyTpl(
+      this.templatePath('_.travis.yml'),
+      this.destinationPath('.travis.yml')
+    )
   }
 
   // The travis tool needs git info, so we need to run this
