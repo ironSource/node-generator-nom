@@ -96,6 +96,7 @@ npm i yo generator-nom -g
 #### Fixed
 
 - Support scoped package names (#12)
+- Remove semicolon after `'use strict'` in main file
 
 ### 2.0.0
 
