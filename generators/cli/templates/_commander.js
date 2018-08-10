@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-'use strict';
+'use strict'
 
 const <%= camelModuleName %> = require('./')
     , program = require('commander')
