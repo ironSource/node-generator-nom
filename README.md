@@ -74,7 +74,7 @@ npm i yo generator-nom -g
 - Capitalize README headers
 - Use standard badge style (remove `?style=flat-square`)
 - Link to license file in README
-- Use author name for copyright (removes the need for `.yo-rc.json`)
+- Save copyright owner to global settings (removes the need for `.yo-rc.json`)
 - Make email and url of `author` in `package.json` optional
 - Set `engines.node` in `package.json` to `>=6`
 - Set npm test script to `<runner> test` instead of `<runner> test/**/*.js`

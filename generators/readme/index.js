@@ -19,7 +19,7 @@ const self = module.exports = class ReadmeGenerator extends Conditional {
     this.camelCaseName = camel(this.scopelessName)
 
     let author = pkg.author
-      , copyrightHolder = this.config.get('copyrightHolder')
+      , copyrightHolder = this.settings.get('copyrightHolder')
 
     if (typeof author === 'string') author = parseAuthor(author)
     if (!author) author = {}

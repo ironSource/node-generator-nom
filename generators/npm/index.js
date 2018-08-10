@@ -296,6 +296,8 @@ const self = module.exports = class NpmGenerator extends Conditional {
       ctx.devDependencies = saveDeps.devDependencies
 
       this.ctx = ctx
+      this.settings.set('copyrightHolder', ctx.copyrightHolder)
+
       done()
     })
   }
