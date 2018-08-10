@@ -37,6 +37,7 @@ const self = module.exports = class ReadmeGenerator extends Conditional {
       : null
 
     this.licenseLink = this.licenseFile || 'http://opensource.org/licenses/' + packageLicense
+    this.copyrightYear = new Date().getFullYear()
     this.packageDescription = pkg.description
 
     let repo = pkg.repository || ''

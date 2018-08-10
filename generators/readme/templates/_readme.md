@@ -28,4 +28,4 @@ npm install <%= packageName %>
 
 ## License
 
-[<%= packageLicense %>](<%= licenseLink %>) © <%= authorLink %>
+[<%= packageLicense %>](<%= licenseLink %>) © <%= copyrightYear %>-present <%= authorLink %>
