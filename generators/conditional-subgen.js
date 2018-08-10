@@ -56,10 +56,12 @@ const self = module.exports = class ConditionalGenerator extends Generator {
         return setImmediate(next)
       }
 
-      latest(dep, (err, version) => {
-        if (err) this.log.error('Could not fetch version of %s, please save manually: %s', dep, err)
-        else output[dep] = '~' + version
-        next()
+      latest(dep).then(version => {
+        output[dep] = '~' + version
+        setImmediate(next)
+      }).catch(err => {
+        this.log.error('Could not fetch version of %s, please save manually: %s', dep, err)
+        setImmediate(next)
       })
     })
   }

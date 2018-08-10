@@ -76,7 +76,7 @@ const self = module.exports = class GithubGenerator extends Conditional {
         if (err) {
           if (err.statusCode == 401) {
             // Clear token and try again
-            this.settings.del('github_oauth')
+            this.settings.delete('github_oauth')
             this.log.error('Could not authorize with github using your token. Have you revoked it?')
             return this._create(localRepo, repositoryName, description, retries + 1, done)
           }
