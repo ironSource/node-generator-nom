@@ -8,7 +8,7 @@ const self = module.exports = class GulpGenerator extends Conditional {
 
     this.option('tasks', {
       type: 'String',
-      defaults: this.templatePath('tasks') + '/*'
+      default: this.templatePath('tasks') + '/*'
     })
 
     this.ctx = {}

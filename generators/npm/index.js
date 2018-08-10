@@ -52,7 +52,7 @@ const self = module.exports = class NpmGenerator extends Conditional {
     this.option('modules', {
       type: 'String',
       desc: 'Module format, case insensitive: ES6 or CommonJS',
-      defaults: 'CommonJS'
+      default: 'CommonJS'
     })
   }
 

@@ -1,7 +1,7 @@
 'use strict'
 
 const resolve = require('path').resolve
-    , helpers = require('yeoman-generator').test
+    , helpers = require('yeoman-test')
     , omit = require('lodash.omit')
 
 // Because Yeoman changes working directory, get it early

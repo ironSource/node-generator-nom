@@ -77,7 +77,7 @@ const self = module.exports = class NomGenerator extends Base {
 
     subgenerators.forEach(subgen => {
       // Note: not supported on command line
-      this.option(subgen, { type: 'Object', defaults: {}, hide: true })
+      this.option(subgen, { type: 'Object', default: {}, hide: true })
     })
   }
 

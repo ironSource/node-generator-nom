@@ -35,10 +35,11 @@
     "sorted-object": "~1.0.0",
     "stable": "~0.1.5",
     "travisjs": "~0.7.0",
-    "yeoman-generator": "~0.21.1"
+    "yeoman-generator": "~0.22.6"
   },
   "devDependencies": {
-    "tape": "~4.2.2"
+    "tape": "~4.2.2",
+    "yeoman-test": "~1.9.1"
   },
   "engines": {
     "node": ">=6"

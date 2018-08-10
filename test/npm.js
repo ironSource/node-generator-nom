@@ -7,7 +7,7 @@ const test = require('tape')
 
 test('main option', (t) => {
   function main(option, expected, msg, next) {
-    run({ options: { main: option }}, (err) => {
+    run({ options: { main: option } }, (err) => {
       if (expected !== null) {
         if (option === false) u.notFiles(t, expected, msg)
         else u.files(t, expected, msg)
