@@ -231,6 +231,7 @@ const self = module.exports = class NpmGenerator extends Conditional {
     {
       name: 'copyrightHolder',
       message: 'Who or what entity is the copyright holder?',
+      store: true,
       default: answers => answers.name,
       validate: val => val.length ? true : 'You have to provide a copyright holder'
     },

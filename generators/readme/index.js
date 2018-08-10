@@ -20,13 +20,15 @@ const self = module.exports = class ReadmeGenerator extends Conditional {
     let author = pkg.author
       , copyrightHolder = this.config.get('copyrightHolder')
 
-    if (typeof author === 'string') author = parseAuthor(author) || {}
+    if (typeof author === 'string') author = parseAuthor(author)
+    if (!author) author = {}
 
-    if (copyrightHolder && (!author || copyrightHolder !== author.name)) {
+    if (copyrightHolder && copyrightHolder !== author.name) {
       this.authorLink = copyrightHolder
-    } else if (author) {
-      if (author.url) this.authorLink = '['+author.name+']('+author.url+')'
-      else this.authorLink = author.name
+    } else if (author.name && author.url) {
+      this.authorLink = '['+author.name+']('+author.url+')'
+    } else if (author.name) {
+      this.authorLink = author.name
     } else {
       this.authorLink = ''
     }
