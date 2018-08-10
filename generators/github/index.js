@@ -168,7 +168,7 @@ const self = module.exports = class GithubGenerator extends Conditional {
       name: 'pub',
       message: 'Do you want to make this repository public?',
       type: 'confirm',
-      default: true
+      default: false
     }], answers => {
       api.repo({ name, description, 'private': !answers.pub }, (err, body, headers) => {
         if (err) return done(err)
