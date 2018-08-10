@@ -27,6 +27,11 @@ const self = module.exports = class GithubGenerator extends Conditional {
       let moduleName = _pkg.name
       let description = _pkg.description
 
+      // Strip scope
+      if (moduleName[0] === '@') {
+        moduleName = moduleName.split('/')[1]
+      }
+
       if (!moduleName) {
         return done(new Error(
           'Package.json or module name is missing. Please describe how you got into this '+
