@@ -257,9 +257,10 @@ const self = module.exports = class NpmGenerator extends Conditional {
     // Skip prompting for overrides
     questions = questions.filter(q => override[q.name] == null || isDependencies(q.name))
 
+    // TODO (after updating yo): return a promise
     let done = this.async()
 
-    this.prompt(questions, ctx => {
+    this.prompt(questions).then(ctx => {
       // Add overrides to context
       Object.keys(override).forEach(key => {
         if (override[key] == null) return

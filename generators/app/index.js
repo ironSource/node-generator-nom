@@ -135,6 +135,7 @@ const self = module.exports = class NomGenerator extends Base {
     })
   }
 
+  // TODO: promisify
   _promptForTasks(primary, secondary, done) {
     let questions = []
 
@@ -154,7 +155,7 @@ const self = module.exports = class NomGenerator extends Base {
 
     if (!questions.length) return done()
 
-    this.prompt(questions, (answers) => {
+    this.prompt(questions).then((answers) => {
       let primary = answers.primary || []
       let secondary = answers.secondary || []
 

@@ -103,9 +103,10 @@ const self = module.exports = class CliGenerator extends Conditional {
       }
     }]
 
+    // TODO (after updating yo): return a promise
     let done = this.async()
 
-    this.prompt(questions, (answers) => {
+    this.prompt(questions).then((answers) => {
       this.answers = answers
       this.pack = pack
 

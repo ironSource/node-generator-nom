@@ -8,7 +8,9 @@ const self = module.exports = class AppVeyorGenerator extends Conditional {
     this.appveyor = new WrappedAppVeyor()
     if (this.appveyor.hasToken()) return
 
+    // TODO (after updating yo): return a promise
     let done = this.async()
+
     this.log('\nPlease create a token for AppVeyor at https://ci.appveyor.com/api-token\n')
 
     this.prompt([{
@@ -16,7 +18,7 @@ const self = module.exports = class AppVeyorGenerator extends Conditional {
       name: 'token',
       message: 'What is your AppVeyor token?',
       filter: val => (typeof val === 'string' ? val.trim() : '')
-    }], answers => {
+    }]).then(answers => {
       let token = answers.token
 
       if (!token) {

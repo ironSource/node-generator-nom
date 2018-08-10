@@ -48,7 +48,7 @@ const self = module.exports = class GithubGenerator extends Conditional {
           moduleName,
           'node-' + moduleName
         ]
-      }], (answers) => {
+      }]).then((answers) => {
         let repositoryName = answers.repositoryName
 
         this._create(repo, repositoryName, description, 0, (err, qualifiedName) => {
@@ -92,7 +92,7 @@ const self = module.exports = class GithubGenerator extends Conditional {
           message: 'Who should be the repository owner?',
           default: defaultOwner,
           filter: (v) => (typeof v === 'string' ? v.trim() : '')
-        }], answers => {
+        }]).then(answers => {
           let owner = answers.owner
           let isDefaultOwner = owner.toLowerCase() === defaultOwner.toLowerCase()
 
@@ -139,6 +139,7 @@ const self = module.exports = class GithubGenerator extends Conditional {
     })
   }
 
+  // TODO: promisify
   _getToken(done) {
     let token = this.settings.get('github_oauth');
     if (token) return setImmediate(done.bind(null, null, token))
@@ -151,7 +152,7 @@ const self = module.exports = class GithubGenerator extends Conditional {
       type: 'input',
       name: 'token',
       message: 'What is your GitHub token?' ,
-    }], props => {
+    }]).then(props => {
       let token = props.token
 
       if (!token) {
@@ -168,13 +169,14 @@ const self = module.exports = class GithubGenerator extends Conditional {
     })
   }
 
+  // TODO: promisify
   _createGitHubProject(api, name, description, done) {
     this.prompt([{
       name: 'pub',
       message: 'Do you want to make this repository public?',
       type: 'confirm',
       default: false
-    }], answers => {
+    }]).then(answers => {
       api.repo({ name, description, 'private': !answers.pub }, (err, body, headers) => {
         if (err) return done(err)
 
