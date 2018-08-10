@@ -361,11 +361,7 @@ const self = module.exports = class NpmGenerator extends Conditional {
       if (err) return done(err)
 
       this.saveDependencies(ctx.devDependencies, { dev: true }, err => {
-        if (err) done(err)
-        else if (ctx.testCommand) {
-          this.log.create('test directory')
-          mkdirp(this.destinationPath('test'), done)
-        } else done()
+        done(err)
       })
     })
   }
