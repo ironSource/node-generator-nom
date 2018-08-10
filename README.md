@@ -85,6 +85,7 @@ npm i yo generator-nom -g
 - Add x86 and x64 to AppVeyor matrix (#15)
 - Add node version badge to README
 - Choose CLI module (none, `minimist`, `yargs`, `meow`, `commander`) (#9)
+- Select copyright owner from previously entered names
 
 #### Removed
 

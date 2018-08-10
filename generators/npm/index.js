@@ -2,6 +2,7 @@
 
 const Conditional = require('../conditional-subgen')
     , paramCase = require('param-case')
+    , chalk = require('chalk')
     , omit = require('lodash.omit')
     , normalOrEmptyUrl = require('./normal-or-empty-url')
     , guessAuthor = require('./guess-author')
@@ -31,6 +32,7 @@ const TEST_FRAMEWORKS = [
 ]
 
 const DEFAULT_MAIN = 'index.js'
+const CUSTOM_SPECIAL_VALUE = '__custom__'
 
 function paramCasePath(path) {
   return path.split(/[\/\\]+/).map(paramCase).filter(k=>k).join('/')
@@ -162,14 +164,14 @@ const self = module.exports = class NpmGenerator extends Conditional {
 
     let questions = [{
       name: 'moduleName',
-      message: 'What do you want to name your module?',
+      message: 'Package name (including scope if any):',
       default: defaults.moduleName,
-      validate: val => val.length ? true : 'You have to provide a module name',
+      validate: val => val.length ? true : 'You have to provide a package name',
       filter: paramCaseName
     },
     {
       name: 'description',
-      message: 'How would you like to describe your module?',
+      message: 'Description:',
       default: defaults.description,
       validate: val => val.length ? true : 'You have to provide a description'
     },
@@ -177,7 +179,7 @@ const self = module.exports = class NpmGenerator extends Conditional {
       type: 'list',
       name: 'license',
       store: true,
-      message: 'Select a license',
+      message: 'Select a license:',
       default: defaults.license,
       choices: this._getLicenses(defaults.license).map(k => {
         return { value: k, name: k === 'UNLICENSED' ? k + ' (meaning proprietary)' : k }
@@ -186,28 +188,28 @@ const self = module.exports = class NpmGenerator extends Conditional {
     {
       type: 'list',
       name: 'testFramework',
-      message: 'Select a test framework',
+      message: 'Select a test framework:',
       store: true,
       default: defaults.testFramework,
       choices: TEST_FRAMEWORKS
     },
     {
       name: 'name',
-      message: 'For author, what is your full name?',
+      message: 'Your full name:',
       store: true,
       default: defaults.name,
       validate: val => val.length ? true : 'You have to provide a name'
     },
     {
       name: 'enableEmail',
-      message: 'For author, want to provide an email address?',
+      message: 'Do you wish to publicize your email address?',
       type: 'confirm',
       store: true,
       default: !!defaults.email
     },
     {
       name: 'email',
-      message: 'Nice. What is your email?',
+      message: 'Email address:',
       store: true,
       when: (answers) => answers.enableEmail,
       default: defaults.email,
@@ -215,14 +217,14 @@ const self = module.exports = class NpmGenerator extends Conditional {
     },
     {
       name: 'enableUrl',
-      message: 'For author, want to provide a public URL?',
+      message: 'Do you wish to publicize your URL?',
       type: 'confirm',
       store: true,
       default: !!defaults.url
     },
     {
       name: 'url',
-      message: 'Will do, what\'s your URL?',
+      message: 'URL:',
       store: true,
       when: (answers) => answers.enableUrl,
       default: defaults.url,
@@ -230,14 +232,20 @@ const self = module.exports = class NpmGenerator extends Conditional {
     },
     {
       name: 'copyrightHolder',
+      message: 'Select a copyright holder:',
+      default: (answers) => this._getDefaultCopyrightHolder(answers),
+      type: 'list',
+      choices: answers => this._getCopyrightHolderChoices(answers)
+    },
+    {
+      name: 'customCopyrightHolder',
       message: 'Who or what entity is the copyright holder?',
-      store: true,
-      default: answers => answers.name,
-      validate: val => val.length ? true : 'You have to provide a copyright holder'
+      when: (answers) => answers.copyrightHolder === CUSTOM_SPECIAL_VALUE,
+      validate: val => val.length && val !== CUSTOM_SPECIAL_VALUE ? true : 'You have to provide a copyright holder'
     },
     {
       name: 'keywords',
-      message: 'What are the space separated keywords for your module?',
+      message: 'Space separated keywords:',
       default: defaults.keywords,
       filter: val => (val || '').toLowerCase().split(/[ ,;\/|]+/).filter(k => k)
     }]
@@ -295,11 +303,43 @@ const self = module.exports = class NpmGenerator extends Conditional {
       ctx.dependencies = saveDeps.dependencies
       ctx.devDependencies = saveDeps.devDependencies
 
+      if (ctx.copyrightHolder === CUSTOM_SPECIAL_VALUE) {
+        ctx.copyrightHolder = ctx.customCopyrightHolder
+      }
+
+      this._saveCopyrightHolder(ctx.copyrightHolder)
       this.ctx = ctx
-      this.settings.set('copyrightHolder', ctx.copyrightHolder)
 
       done()
     })
+  }
+
+  _getCopyrightHolderChoices (answers) {
+    let choices = this.settings.get('copyrightHolderHistory') || []
+    let def = this.settings.get('copyrightHolder')
+
+    if (choices.indexOf(answers.name) < 0) choices.push(answers.name)
+    if (def && choices.indexOf(def) < 0) choices.push(def)
+
+    choices = choices.map(name => ({ name, value: name }))
+    choices.push({ name: chalk.yellow('Custom..'), value: CUSTOM_SPECIAL_VALUE })
+
+    return choices
+  }
+
+  _getDefaultCopyrightHolder (answers) {
+    return this.settings.get('copyrightHolder') || answers.name
+  }
+
+  _saveCopyrightHolder (copyrightHolder) {
+    const history = this.settings.get('copyrightHolderHistory') || []
+
+    if (history.indexOf(copyrightHolder) < 0) {
+      history.push(copyrightHolder)
+      this.settings.set('copyrightHolderHistory', history)
+    }
+
+    this.settings.set('copyrightHolder', copyrightHolder)
   }
 
   // Note: the order in which we set fields matters for new packages.
@@ -375,7 +415,7 @@ const self = module.exports = class NpmGenerator extends Conditional {
     if (names.length) questions.push({
       type: 'checkbox',
       name: group,
-      message: `Which ${group} do you want to keep?`,
+      message: `Select ${group} to keep:`,
       choices: names.map(name => {
         return { name, value: name, checked: true }
       })
