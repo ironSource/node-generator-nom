@@ -33,12 +33,18 @@ const self = module.exports = class ReadmeGenerator extends Conditional {
       this.authorLink = ''
     }
 
-    this.packageLicense = pkg.license
-    this.licenseFile = this.fs.exists('LICENSE.md') ? 'LICENSE.md'
+    const licenseId = pkg.license || 'UNLICENSED'
+    const licenseFile
+      = this.fs.exists('LICENSE.md') ? 'LICENSE.md'
+      : this.fs.exists('license.md') ? 'license.md'
       : this.fs.exists('LICENSE') ? 'LICENSE'
+      : this.fs.exists('license') ? 'license'
       : null
 
-    this.licenseLink = this.licenseFile || 'http://opensource.org/licenses/' + packageLicense
+    this.licenseLink = licenseFile
+      ? '[' + licenseId + '](' + licenseFile + ')'
+      : licenseId
+
     this.copyrightYear = new Date().getFullYear()
     this.packageDescription = pkg.description
 
