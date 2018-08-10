@@ -67,8 +67,35 @@ npm i yo generator-nom -g
 
 ### Unreleased
 
+#### Changed
+
+- Travis and AppVeyor: upgrade to node 6, 8, 9 and 10
+- Default to private GitHub repo
+- Capitalize README headers
+- Use standard badge style (remove `?style=flat-square`)
+- Link to license file in README
+- Use author name for copyright (removes the need for `.yo-rc.json`)
+- Make email and url of `author` in `package.json` optional
+- Set `engines.node` in `package.json` to `>=6`
+- Set npm test script to `<runner> test` instead of `<runner> test/**/*.js`
+
+#### Added
+
+- Add copyright year (`<year>-present`) to README
+- Add x86 and x64 to AppVeyor matrix (#15)
+- Add node version badge to README
+- Choose CLI module (none, `minimist`, `yargs`, `meow`, `commander`) (#9)
+
+#### Removed
+
 - Remove `gulpfile.babel.js`
 - Remove use of `glob` in `gulpfile.js`, prefer explicit `require()`
+- Remove `engines.npm` from `package.json`
+- Remove `shallow_clone: true` from `appveyor.yml`
+
+#### Fixed
+
+- Support scoped package names (#12)
 
 ### 2.0.0
 
