@@ -157,6 +157,19 @@ const self = module.exports = class NpmGenerator extends Conditional {
       choices: TEST_FRAMEWORKS
     },
     {
+      type: 'list',
+      name: 'codeStyle',
+      message: 'Select a standard-like code style:',
+      default: this._getDefaultCodeStyle(),
+      choices: this._getCodeStyleChoices()
+    },
+    {
+      name: 'customCodeStyle',
+      message: 'What is the package name of the code style?',
+      when: (answers) => answers.codeStyle === CUSTOM_SPECIAL_VALUE,
+      validate: val => val.length && val !== CUSTOM_SPECIAL_VALUE ? true : 'You have to provide a package name'
+    },
+    {
       name: 'name',
       message: 'Your full name:',
       store: true,
@@ -245,6 +258,14 @@ const self = module.exports = class NpmGenerator extends Conditional {
         if (ctx[key] == null) ctx[key] = defaults[key]
       })
 
+      if (ctx.copyrightHolder === CUSTOM_SPECIAL_VALUE) {
+        ctx.copyrightHolder = ctx.customCopyrightHolder
+      }
+
+      if (ctx.codeStyle === CUSTOM_SPECIAL_VALUE) {
+        ctx.codeStyle = ctx.customCodeStyle
+      }
+
       ctx.testFramework = ctx.testFramework === 'none' ? null : ctx.testFramework
       ctx.testCommand = ctx.testFramework ? ctx.testFramework + ' test' : ''
 
@@ -253,6 +274,10 @@ const self = module.exports = class NpmGenerator extends Conditional {
 
       if (ctx.testFramework && ctx.devDependencies.indexOf(ctx.testFramework) < 0) {
         ctx.devDependencies.push(ctx.testFramework)
+      }
+
+      if (ctx.codeStyle && ctx.devDependencies.indexOf(ctx.codeStyle) < 0) {
+        ctx.devDependencies.push(ctx.codeStyle)
       }
 
       let saveDeps = {}
@@ -267,11 +292,8 @@ const self = module.exports = class NpmGenerator extends Conditional {
       ctx.dependencies = saveDeps.dependencies
       ctx.devDependencies = saveDeps.devDependencies
 
-      if (ctx.copyrightHolder === CUSTOM_SPECIAL_VALUE) {
-        ctx.copyrightHolder = ctx.customCopyrightHolder
-      }
-
       this._saveCopyrightHolder(ctx.copyrightHolder)
+      this._saveCodeStyle(ctx.codeStyle)
       this.ctx = ctx
 
       done()
@@ -306,6 +328,41 @@ const self = module.exports = class NpmGenerator extends Conditional {
     this.settings.set('copyrightHolder', copyrightHolder)
   }
 
+  _getCodeStyleChoices () {
+    let choices = this.settings.get('codeStyleHistory') || []
+    let def = this.settings.get('codeStyle')
+
+    if (choices.indexOf('standard') < 0) choices.push('standard')
+    if (choices.indexOf('xo') < 0) choices.push('xo')
+    if (def && choices.indexOf(def) < 0) choices.push(def)
+
+    choices = choices.map(name => ({ name, value: name }))
+
+    choices.unshift({ name: 'none', value: null })
+    choices.push({ name: chalk.yellow('Custom..'), value: CUSTOM_SPECIAL_VALUE })
+
+    return choices
+  }
+
+  _getDefaultCodeStyle () {
+    if (this.defaults.devDependencies.standard) {
+      return 'standard'
+    }
+
+    return this.settings.get('codeStyle') || null
+  }
+
+  _saveCodeStyle (codeStyle) {
+    const history = this.settings.get('codeStyleHistory') || []
+
+    if (codeStyle && history.indexOf(codeStyle) < 0) {
+      history.push(codeStyle)
+      this.settings.set('codeStyleHistory', history)
+    }
+
+    this.settings.set('codeStyle', codeStyle || null)
+  }
+
   // Note: the order in which we set fields matters for new packages.
   _writePackage() {
     let ctx = this.ctx
@@ -334,6 +391,15 @@ const self = module.exports = class NpmGenerator extends Conditional {
 
     if (!pack.scripts) pack.scripts = {}
     if (!pack.scripts.test && ctx.testCommand) pack.scripts.test = ctx.testCommand
+
+    if (ctx.codeStyle) {
+      const test = pack.scripts.test || ''
+      const bin = ctx.codeStyle[0] === '@' ? ctx.codeStyle.split('/')[1] : ctx.codeStyle
+
+      if (test.indexOf(bin) < 0) {
+        pack.scripts.test = test ? bin + ' && ' + test : bin
+      }
+    }
 
     ;['dependencies', 'devDependencies', 'keywords'].forEach(key => {
       pack[key] = deepSortObject(ctx[key])

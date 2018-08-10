@@ -6,7 +6,8 @@
 [![node](https://img.shields.io/node/v/<%= packageName %>.svg)](https://www.npmjs.org/package/<%= packageName %>)<% if (repoName) { %><% if (hasTravis) { %>
 [![Travis build status](https://img.shields.io/travis/<%= repoName %>.svg?label=travis)](http://travis-ci.org/<%= repoName %>) <% } %><% if (hasAppVeyor) { %>
 [![AppVeyor build status](https://img.shields.io/appveyor/ci/<%= repoName %>.svg?label=appveyor)](https://ci.appveyor.com/project/<%= repoName %>) <% } %>
-[![Dependency status](https://img.shields.io/david/<%= repoName %>.svg)](https://david-dm.org/<%= repoName %>)<% } %>
+[![Dependency status](https://img.shields.io/david/<%= repoName %>.svg)](https://david-dm.org/<%= repoName %>)<% } %><% if (hasStandard) {%>
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)<% } %>
 
 ## Example
 

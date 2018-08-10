@@ -60,6 +60,7 @@ const self = module.exports = class ReadmeGenerator extends Conditional {
 
     this.hasTravis = this.fs.exists('.travis.yml')
     this.hasAppVeyor = this.fs.exists('appveyor.yml')
+    this.hasStandard = !!(pkg.devDependencies && pkg.devDependencies.standard)
 
     this.fs.copyTpl(
       this.templatePath('_readme.md'),

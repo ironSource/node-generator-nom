@@ -35,10 +35,6 @@ Add `appveyor.yml` for node 0.10 and iojs, setup GitHub hook. Asks for access to
 
 Create a CLI app (with [meow](https://github.com/sindresorhus/meow)) and add a `bin` field to `package.json`. Asks for name and path.
 
-### `style` (todo)
-
-Add `standard` or `xo` as a pretest script.
-
 ### `readme`
 
 Add `readme.md` with common sections and [shield.io](https://shield.io) badges for npm and david. If you did the travis and/or appveyor setup, badges for those services will be added as well.
@@ -89,6 +85,7 @@ npm i yo@latest generator-nom@latest -g
 
 #### Added
 
+- Select `standard` or custom code style
 - Add copyright year (`<year>-present`) to README
 - Add x86 and x64 to AppVeyor matrix
 - Add node version badge to README
