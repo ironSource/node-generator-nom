@@ -45,7 +45,7 @@ Add `readme.md` with common sections and [shield.io](https://shield.io) badges f
 
 ### `gulp`
 
-Create an ES5 or ES6 gulpfile and `tasks` directory. Installs `gulp` and if ES6, `babel-core`.
+Create a gulpfile and `tasks` directory. Installs `gulp`.
 
 ## Usage
 
@@ -64,6 +64,11 @@ npm i yo generator-nom -g
 ```
 
 ## Changelog
+
+### Unreleased
+
+- Remove `gulpfile.babel.js`
+- Remove use of `glob` in `gulpfile.js`, prefer explicit `require()`
 
 ### 2.0.0
 

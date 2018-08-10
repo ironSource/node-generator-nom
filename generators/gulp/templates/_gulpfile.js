@@ -1,9 +1,7 @@
-var gulp = require('gulp')
-  , path = require('path')
-  , glob = require('glob')
+'use strict'
 
-glob.sync('tasks/*.js').forEach(function(file) {
-  require( path.resolve(file) )
-})
+const gulp = require('gulp')
+
+require('./tasks/build')
 
 gulp.task('default', ['build'])
