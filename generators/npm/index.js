@@ -334,7 +334,6 @@ const self = module.exports = class NpmGenerator extends Conditional {
 
     const engines = pack.engines || {}
     engines.node = engines.node || '>=4.0.0'
-    engines.npm = engines.npm || '>=2.0.0'
     pack.engines = deepSortObject(engines)
 
     this.fs.writeJSON(this.destinationPath('package.json'), pack)
