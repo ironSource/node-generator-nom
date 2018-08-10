@@ -28,4 +28,4 @@ npm install <%= packageName %>
 
 ## License
 
-[<%= packageLicense %>](http://opensource.org/licenses/<%= packageLicense %>) © <%= authorLink %>
+[<%= packageLicense %>](<%= licenseLink %>) © <%= authorLink %>

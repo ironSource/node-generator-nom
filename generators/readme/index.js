@@ -32,6 +32,11 @@ const self = module.exports = class ReadmeGenerator extends Conditional {
     }
 
     this.packageLicense = pkg.license
+    this.licenseFile = this.fs.exists('LICENSE.md') ? 'LICENSE.md'
+      : this.fs.exists('LICENSE') ? 'LICENSE'
+      : null
+
+    this.licenseLink = this.licenseFile || 'http://opensource.org/licenses/' + packageLicense
     this.packageDescription = pkg.description
 
     let repo = pkg.repository || ''
