@@ -41,7 +41,7 @@
     "tape": "~4.2.2"
   },
   "engines": {
-    "node": ">=4.3.0"
+    "node": ">=6"
   },
   "repository": "ironSource/node-generator-nom",
   "bugs": "https://github.com/ironSource/node-generator-nom/issues",

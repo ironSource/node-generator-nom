@@ -333,7 +333,7 @@ const self = module.exports = class NpmGenerator extends Conditional {
     })
 
     const engines = pack.engines || {}
-    engines.node = engines.node || '>=4.0.0'
+    engines.node = engines.node || '>=6'
     pack.engines = deepSortObject(engines)
 
     this.fs.writeJSON(this.destinationPath('package.json'), pack)
