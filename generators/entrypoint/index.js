@@ -11,30 +11,19 @@ const self = module.exports = class EntrypointGenerator extends Conditional {
   constructor (args, options, config) {
     super(args, options, config)
 
-    // "--modules es6"
-    this.option('modules', {
-      type: String,
-      desc: 'Module format, case insensitive: es6 or commonjs',
-      default: 'commonjs'
+    // "--esm"
+    this.option('esm', {
+      type: Boolean,
+      desc: 'Use ECMAScript Modules instead of CommonJS',
+      default: false
     })
-  }
-
-  initializing () {
-    const modules = (this.options.modules || 'commonjs').toLowerCase()
-
-    if (modules !== 'es6' && modules !== 'commonjs') {
-      const msg = 'Module format must be "es6", "commonjs" or undefined'
-      return this.env.error(msg)
-    }
-
-    this.options.modules = modules
   }
 
   configuring () {
     this.fs.copyTpl(
       this.templatePath('_index.js'),
       this.destinationPath('index.js'),
-      { modules: this.options.modules }
+      { esm: this.options.esm }
     )
   }
 }

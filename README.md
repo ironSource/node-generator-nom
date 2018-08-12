@@ -17,7 +17,7 @@ Create `package.json`, optionally install a test framework (`tape`, `tap`, `moch
 
 ### `entrypoint`
 
-Create an `index.js`, unless it already exists (you can optionally overwrite the existing file). To create an `index.js` with an ECMAScript Modules export, run either `yo nom --modules es6` (when running all subgenerators) or `yo nom:entrypoint --modules es6` (when running this subgenerator individually).
+Create an `index.js`, unless it already exists (you can optionally overwrite the existing file). To create an `index.js` with an ECMAScript Modules export, run either `yo nom --esm` (when running all subgenerators) or `yo nom:entrypoint --esm` (when running this subgenerator individually).
 
 ### `git`
 

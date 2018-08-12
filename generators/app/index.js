@@ -27,20 +27,12 @@ const self = module.exports = class NomGenerator extends Generator {
       })
     })
 
-    // "--modules es6"
-    this.option('modules', {
-      type: String,
-      desc: 'Module format, case insensitive: ES6 or CommonJS'
+    // "--esm"
+    this.option('esm', {
+      type: Boolean,
+      desc: 'Use ECMAScript Modules instead of CommonJS',
+      default: false
     })
-
-    let modules = this.options.modules
-
-    if (modules !== undefined) {
-      modules = this.options.modules = modules.toLowerCase()
-      if (modules !== 'es6' && modules !== 'commonjs') {
-        throw new Error('Module format must be "es6", "commonjs" or undefined')
-      }
-    }
 
     // "--enable a --enable b" or "--enable a b"
     ;['enable', 'disable'].forEach( (option, i) => {
@@ -166,7 +158,7 @@ const self = module.exports = class NomGenerator extends Generator {
     return Object.assign({
       name: this.options.name,
       description: this.options.description,
-      modules: this.options.modules,
+      esm: this.options.esm,
       skipInstall: this.options.skipInstall,
       skipCache: this.options.skipCache
     }, this.options[generator])

@@ -1,6 +1,6 @@
 'use strict'
 
-<% if (modules === 'es6') { -%>
+<% if (esm) { -%>
 export default function () {
 
 }
