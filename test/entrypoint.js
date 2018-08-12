@@ -20,6 +20,6 @@ test('esm option', (t) => {
 
   run({ options: { esm: true } }, () => {
     let expected = u.read(u.fixture('entrypoint/index-esm.js'))
-    t.equal(u.read('index.js'), expected, 'ES6')
+    t.equal(u.read('index.mjs'), expected, 'ES6')
   })
 })

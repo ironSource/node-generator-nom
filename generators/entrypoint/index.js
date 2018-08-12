@@ -22,7 +22,7 @@ const self = module.exports = class EntrypointGenerator extends Conditional {
   configuring () {
     this.fs.copyTpl(
       this.templatePath('_index.js'),
-      this.destinationPath('index.js'),
+      this.destinationPath(self._file(this.options.esm)),
       { esm: this.options.esm }
     )
   }
@@ -31,6 +31,11 @@ const self = module.exports = class EntrypointGenerator extends Conditional {
 self.task = 'Create index.js file'
 self.regenerate = 'Recreate index.js file'
 
+self._file = function (esm) {
+  return esm ? 'index.mjs' : 'index.js'
+}
+
 self.shouldRun = function (ctx, opts, done) {
-  done(null, !pathExists.sync(ctx.destinationPath('index.js')))
+  const file = self._file(opts.esm)
+  done(null, !pathExists.sync(ctx.destinationPath(file)))
 }
