@@ -121,6 +121,7 @@ const self = module.exports = class NomGenerator extends Generator {
         ;(should ? primary : secondary).push({
           value: subgen,
           name: task,
+          short: subgen,
           checked: should ? runByDefault : false
         })
 
@@ -136,14 +137,14 @@ const self = module.exports = class NomGenerator extends Generator {
     if (primary.length) questions.push({
       type: 'checkbox',
       name: 'primary',
-      message: 'Which module tasks would you like to run?',
+      message: 'Tasks:',
       choices: primary
     })
 
     if (secondary.length) questions.push({
       type: 'checkbox',
       name: 'secondary',
-      message: 'Which additional module tasks would you like to run?',
+      message: 'Additional tasks:',
       choices: secondary
     })
 
