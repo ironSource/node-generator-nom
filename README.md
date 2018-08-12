@@ -13,7 +13,11 @@
 
 ### `npm`
 
-Create `package.json`, `.gitignore`, install test framework (tape, tap, mocha, grunt, cake, or ava), add `LICENSE` file (MIT, BSD2 or BSD3). If a `package.json` already exists, it will be merged, used for default answers and for sort order of the top-level fields. At deeper levels, like dependencies, nom behaves like npm and sorts lexicographically.
+Create `package.json`, optionally install a test framework (`tape`, `tap`, `mocha`, `grunt`, `cake`, or `ava`), add `LICENSE` file (MIT, BSD2 or BSD3), optionally add and install `standard` or a compatible code style. If a `package.json` already exists, it will be merged, used for default answers and for sort order of the top-level fields. At deeper levels, like dependencies, nom behaves like npm and sorts lexicographically.
+
+### `entrypoint`
+
+Create an `index.js`, unless it already exists (you can optionally overwrite the existing file). To create an `index.js` with an ECMAScript Modules export, run either `yo nom --modules es6` (when running all subgenerators) or `yo nom:entrypoint --modules es6` (when running this subgenerator individually).
 
 ### `git`
 

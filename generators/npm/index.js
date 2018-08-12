@@ -36,29 +36,10 @@ function paramCasePath(path) {
 }
 
 const self = module.exports = class NpmGenerator extends Conditional {
-  constructor(args, options, config) {
-    super(args, options, config)
-
-    // "--modules es6"
-    this.option('modules', {
-      type: String,
-      desc: 'Module format, case insensitive: es6 or commonjs',
-      default: 'commonjs'
-    })
-  }
-
   initializing() {
     let done = this.async()
-    let modules = (this.options.modules || 'commonjs').toLowerCase()
 
-    if (modules !== 'es6' && modules !== 'commonjs') {
-      let msg = 'Module format must be "es6", "commonjs" or undefined'
-      return this.env.error(msg)
-    }
-
-    this.options.modules = modules
     this.pack = this.fs.readJSON('package.json', {})
-
     this._getDefaults((err, defaults) => {
       if (err) return done(err)
       this.defaults = defaults
@@ -419,8 +400,6 @@ const self = module.exports = class NpmGenerator extends Conditional {
 
     this._writePackage()
 
-    cp('_index.js', ctx.main)
-
     let license = ctx.license.toLowerCase()
     if (LICENSE_TEMPLATES.indexOf(license) >= 0) {
       cp('license/' + license, 'LICENSE')
@@ -451,8 +430,8 @@ const self = module.exports = class NpmGenerator extends Conditional {
   }
 }
 
-self.task = 'Create package.json and common files'
-self.regenerate = 'Recreate package.json and common files'
+self.task = 'Create package.json and license'
+self.regenerate = 'Recreate package.json and license'
 
 self.shouldRun = function (ctx, opts, done) {
   done(null, !ctx.fs.readJSON('package.json', false))
