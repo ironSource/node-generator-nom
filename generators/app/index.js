@@ -6,6 +6,7 @@ const Generator = require('yeoman-generator')
 const subgenerators =
   [ 'npm'
   , 'git'
+  , 'gitignore'
   , 'github'
   , 'travis'
   , 'appveyor'

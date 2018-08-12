@@ -19,6 +19,10 @@ Create `package.json`, `.gitignore`, install test framework (tape, tap, mocha, g
 
 Initialize local git repository, unless `.git` directory exists.
 
+### `gitignore`
+
+Create `.gitignore` file, unless it already exists (you can optionally overwrite the existing file).
+
 ### `github`
 
 Create public or private GitHub project, named "module-name" or "node-module-name". Unless local git already has configured remotes. Asks for access token and repository owner (which defaults to the owner of the token), skips creation if the repository already exists, adds URLs to `package.json` and adds remote origin.

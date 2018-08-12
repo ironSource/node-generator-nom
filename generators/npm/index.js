@@ -420,7 +420,6 @@ const self = module.exports = class NpmGenerator extends Conditional {
     this._writePackage()
 
     cp('_index.js', ctx.main)
-    cp('_.gitignore', '.gitignore')
 
     let license = ctx.license.toLowerCase()
     if (LICENSE_TEMPLATES.indexOf(license) >= 0) {
