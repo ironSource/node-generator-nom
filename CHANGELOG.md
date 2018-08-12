@@ -28,6 +28,11 @@ npm i yo@latest ironSource/node-generator-nom#next -g
 - Make email address of `author` in `package.json` optional
 - Set `engines.node` in `package.json` to `>=6`
 - Set npm test script to `<runner> test` instead of `<runner> test/**/*.js`
+- Move generation of `.gitignore` to own subgenerator (`gitignore`)
+- Move generation of `index.js` to own subgenerator (`entrypoint`)
+- To use ECMAScript Modules, pass `--esm` instead of `--modules es6`
+- If `esm` is true, create `index.mjs` (per the [Node.js EP for ES Modules](https://github.com/nodejs/node-eps/blob/master/002-es-modules.md)) rather than `index.js`
+- Tweak generated JS to match `standard` and similar code styles.
 
 ### Added
 
@@ -40,11 +45,12 @@ npm i yo@latest ironSource/node-generator-nom#next -g
 
 ### Removed
 
+- Remove `esnext` and `modules` options
 - Remove `gulpfile.babel.js`
 - Remove use of `glob` in `gulpfile.js`, prefer explicit `require()`
 - Remove `engines.npm` from `package.json`
 - Remove `shallow_clone: true` from `appveyor.yml`
-- Remove `--main` option
+- Remove `main` option (if you want to skip generating `index.js`, you should now skip the `entrypoint` generator instead of passing `--no-main` on the CLI or `main: false` programmatically)
 - Remove creation of `test/` directory.
 
 ### Fixed
