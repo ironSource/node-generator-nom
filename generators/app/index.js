@@ -27,12 +27,6 @@ const self = module.exports = class NomGenerator extends Generator {
       })
     })
 
-    // "--esnext" or "--no-esnext"
-    this.option('esnext', {
-      type: Boolean,
-      desc: `Use ES6 when possible or never (--no-esnext)`
-    })
-
     // "--modules es6"
     this.option('modules', {
       type: String,
@@ -47,8 +41,6 @@ const self = module.exports = class NomGenerator extends Generator {
         throw new Error('Module format must be "es6", "commonjs" or undefined')
       }
     }
-
-    if (this.options.esnext === false) this.options.modules = 'commonjs'
 
     // "--enable a --enable b" or "--enable a b"
     ;['enable', 'disable'].forEach( (option, i) => {
@@ -174,7 +166,6 @@ const self = module.exports = class NomGenerator extends Generator {
     return Object.assign({
       name: this.options.name,
       description: this.options.description,
-      esnext: this.options.esnext,
       modules: this.options.modules,
       skipInstall: this.options.skipInstall,
       skipCache: this.options.skipCache

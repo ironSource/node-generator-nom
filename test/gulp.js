@@ -13,7 +13,7 @@ test('creates gulpfile and example gulp task', (t) => {
 test('saves dependencies', (t) => {
   t.plan(1)
 
-  run({ options: { esnext: true } }, () => {
+  run(() => {
     let expected = ['gulp']
       , pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'))
       , actual = Object.keys(pkg.devDependencies)
