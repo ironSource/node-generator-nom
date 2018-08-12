@@ -2,7 +2,7 @@
 'use strict'
 
 const meow = require('meow')
-    , <%= camelModuleName %> = require('./')
+const <%= camelModuleName %> = require('.')
 
 const cli = meow({
   help: [

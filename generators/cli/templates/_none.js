@@ -1,4 +1,4 @@
 #!/usr/bin/env node
 'use strict'
 
-const <%= camelModuleName %> = require('./')
+const <%= camelModuleName %> = require('.')

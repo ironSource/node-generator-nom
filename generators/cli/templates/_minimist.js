@@ -1,5 +1,5 @@
 #!/usr/bin/env node
 'use strict'
 
-const <%= camelModuleName %> = require('./')
-    , argv = require('minimist')(process.argv.slice(2))
+const <%= camelModuleName %> = require('.')
+const argv = require('minimist')(process.argv.slice(2))
