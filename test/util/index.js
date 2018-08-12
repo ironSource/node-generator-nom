@@ -23,3 +23,7 @@ exports.fixture = function fixture(path) {
 exports.read = function read(path, encoding) {
   return fs.readFileSync(path, encoding || 'utf8')
 }
+
+exports.readJSON = function (path) {
+  return JSON.parse(exports.read(path))
+}
