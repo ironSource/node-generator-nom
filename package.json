@@ -6,7 +6,7 @@
   "keywords": [
     "yeoman-generator"
   ],
-  "main": "src/app/index.js",
+  "main": "generators/app/index.js",
   "files": [
     "src"
   ],
