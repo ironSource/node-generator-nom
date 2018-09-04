@@ -13,8 +13,7 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "test": "tape test/*.js",
-    "prepublish": "npm test"
+    "test": "tape test/*.js"
   },
   "author": "Vincent Weevers",
   "dependencies": {
