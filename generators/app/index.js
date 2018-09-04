@@ -4,16 +4,16 @@ const after = require('after')
 const Generator = require('yeoman-generator')
 
 const subgenerators =
-  [ 'npm'
-  , 'entrypoint'
-  , 'git'
-  , 'gitignore'
-  , 'github'
-  , 'travis'
-  , 'appveyor'
-  , 'cli'
-  , 'readme'
-  , 'gulp' ]
+  [ { name: 'npm', generator: require('../npm'), resolved: require.resolve('../npm') }
+  , { name: 'entrypoint', generator: require('../entrypoint'), resolved: require.resolve('../entrypoint') }
+  , { name: 'git', generator: require('../git'), resolved: require.resolve('../git') }
+  , { name: 'gitignore', generator: require('../gitignore'), resolved: require.resolve('../gitignore') }
+  , { name: 'github', generator: require('../github'), resolved: require.resolve('../github') }
+  , { name: 'travis', generator: require('../travis'), resolved: require.resolve('../travis') }
+  , { name: 'appveyor', generator: require('../appveyor'), resolved: require.resolve('../appveyor') }
+  , { name: 'cli', generator: require('../cli'), resolved: require.resolve('../cli') }
+  , { name: 'readme', generator: require('../readme'), resolved: require.resolve('../readme') }
+  , { name: 'gulp', generator: require('../gulp'), resolved: require.resolve('../gulp') } ]
 
 const self = module.exports = class NomGenerator extends Generator {
   constructor(args, options, config) {
@@ -57,7 +57,7 @@ const self = module.exports = class NomGenerator extends Generator {
 
     subgenerators.forEach(subgen => {
       // Note: not supported on command line
-      this.option(subgen, { type: (v) => v || {}, default: {}, hide: true })
+      this.option(subgen.name, { type: (v) => v || {}, default: {}, hide: true })
     })
   }
 
@@ -73,28 +73,26 @@ const self = module.exports = class NomGenerator extends Generator {
       })
 
     subgenerators.forEach(subgen => {
-      let path = require.resolve(`../${subgen}`)
-        , Generator = require(path)
-
+      let Generator = subgen.generator
       let task = Generator.task
       let shouldRun = Generator.shouldRun
       let regenerate = Generator.regenerate
       let runByDefault = Generator.runByDefault == null ? true : !!Generator.runByDefault
 
-      let generatorOptions = this._getGeneratorOptions(subgen)
+      let generatorOptions = this._getGeneratorOptions(subgen.name)
 
       shouldRun(this, generatorOptions, (err, should) => {
         if (err) return next(err)
 
         // TODO: maybe save these in rc too? So when nom (or a subgen) is executed
         // instead of the parent, these options aren't lost.
-        let enable = this.options.enable.indexOf(subgen) >= 0
-        let disable = this.options.disable.indexOf(subgen) >= 0
+        let enable = this.options.enable.indexOf(subgen.name) >= 0
+        let disable = this.options.disable.indexOf(subgen.name) >= 0
 
         if (disable) return next() // Skip subgen, no matter what
 
         if (should && enable) { // Skip question, subgen is required by parent
-          this.tasksToRun.push(subgen)
+          this.tasksToRun.push(subgen.name)
           return next()
         }
 
@@ -105,9 +103,9 @@ const self = module.exports = class NomGenerator extends Generator {
 
         // TODO: remember choices independent of `should`
         ;(should ? primary : secondary).push({
-          value: subgen,
+          value: subgen.name,
           name: task,
-          short: subgen,
+          short: subgen.name,
           checked: should ? runByDefault : false
         })
 
@@ -145,13 +143,10 @@ const self = module.exports = class NomGenerator extends Generator {
     })
   }
 
-  _sub(generator) {
-    if (this.tasksToRun.indexOf(generator) < 0) return
-
-    const fp = require.resolve(`../${generator}`)
-    const options = this._getGeneratorOptions(generator)
-
-    this.composeWith(fp, options)
+  _sub(subgen) {
+    if (this.tasksToRun.indexOf(subgen.name) < 0) return
+    const options = this._getGeneratorOptions(subgen.name)
+    this.composeWith(subgen.resolved, options)
   }
 
   _getGeneratorOptions(generator) {
@@ -166,8 +161,8 @@ const self = module.exports = class NomGenerator extends Generator {
 }
 
 // Add subgens in same order, regardless of which the user picked
-subgenerators.forEach(sub => {
-  self.prototype['run_' + sub] = function() {
-    this._sub(sub)
+subgenerators.forEach(subgen => {
+  self.prototype['run_' + subgen.name] = function() {
+    this._sub(subgen)
   }
 })
