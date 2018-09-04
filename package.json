@@ -8,7 +8,9 @@
   ],
   "main": "generators/app/index.js",
   "files": [
-    "src"
+    "generators",
+    "demo.gif",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "test": "tape test/*.js",
